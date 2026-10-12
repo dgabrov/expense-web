@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Expenses</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo"></div>
+            </div>
+            <nav class="menu" id="menu">
+                <ul>
+                    <li><a href="#">first</a></li>
+                    <li><a href="#">second</a></li>
+                    <li><a href="#">third</a></li>
+                    <li><a href="#">fourth</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user">not logged in</div>
+    </header>
+
+    <div class="container">
+
+        <h1>Transactions</h1>
+        <div class="search-filters search-filters-vertical">
+            <div class="search-field search-field-range">
+                <label>Date:</label>
+                <div class="input-range">
+                    <input type="text" placeholder="From">
+                    <span>-</span>
+                    <input type="text" placeholder="To">
+                </div>
+            </div>
+            <div class="search-field">
+                <div class="checkbox-row">
+                    <input type="checkbox"> Exclude none
+                </div>
+            </div>
+            <div class="search-field">
+                <label>Report:</label>
+                <select>
+                    <option id="list">List</option>
+                    <option id="last">Last</option>
+                    <option id="group">Group</option>
+                    <option id="category">Category</option>
+                </select>
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="filter-btn">Run</button>
+        </div>
+        <div>Placeholder for results is here</div>
+
+    </div>
+</div>
+
+<script src="script/menu.js"></script>
+</body>
+</html>
+

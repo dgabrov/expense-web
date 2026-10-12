@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Expenses</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo"></div>
+            </div>
+            <nav class="menu" id="menu">
+                <ul>
+                    <li><a href="#">first</a></li>
+                    <li><a href="#">second</a></li>
+                    <li><a href="#">third</a></li>
+                    <li><a href="#">fourth</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user">not logged in</div>
+    </header>
+    <div class="error">
+        <div>message 1</div>
+        <div>message 2</div>
+        <div>message 3</div>
+    </div>
+
+    <div class="container">
+
+
+        <h1>Expense Tracker</h1>
+        <h2>Sign in to your account</h2>
+
+        <div class="form-group">
+            <label for="login">Login</label>
+            <input class="mbottom" type="text" id="login" name="login" placeholder="Enter your username">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password">
+            <div class="login-button">Sign In</div>
+        </div>
+    </div>
+</div>
+
+<script src="script/menu.js"></script>
+</body>
+</html>
