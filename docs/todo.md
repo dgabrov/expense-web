@@ -14,8 +14,5 @@ done - edit account
 done - confirm delete account
 
 - reports
-
 - upload csv
-
 - upload cash
-- confirm upload cash
