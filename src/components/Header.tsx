@@ -1,8 +1,18 @@
-import {useState} from "react";
-import {useAppSelector} from "../reducer/store.ts";
+import {useEffect, useState} from "react";
+import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
+import {filterExpiredErrors} from "../reducer/header.ts";
 
 export const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            dispatch(filterExpiredErrors())
+        }, 500)
+
+        return () => clearInterval(interval)
+    }, [])
 
     const logout = (e: any) => {
         e.preventDefault()

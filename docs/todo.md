@@ -1,18 +1,15 @@
-we got the following pages:
-done - login (index)
+code the following pages: 
 
-done - transactions
-done - edit transaction
-done - confirm delete transactions
+Accounts.tsx
+Cash.tsx
+Categories.tsx
+CDelTransaction.tsx
+Csv.tsx
+EditTransaction.tsx
+Groups.tsx
+done Header.tsx
+done Login.tsx
+NotFound.tsx
+Reports.tsx
+Transactions.tsx
 
-done - categories
-done - edit categories
-done - confirm delete categories
-
-done - accounts
-done - edit account
-done - confirm delete account
-
-- reports
-- upload csv
-- upload cash

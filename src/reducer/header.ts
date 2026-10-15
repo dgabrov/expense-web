@@ -26,19 +26,36 @@ const loggedUserImpl = (store: HeaderStore, data: PayloadAction<LoggedUser | nul
     store.location = data.payload === null ? Location.login : Location.transactions;
 }
 
+const addErrorImpl = (store: HeaderStore, data: PayloadAction<string>) => {
+    const message = data.payload
+    const date = Date.now()
+
+    store.errors.push({date, message})
+}
+
+const filterExpiredErrorsImpl = (store: HeaderStore) => {
+    const minimumPastDate= Date.now() - 3000
+
+    store.errors = store.errors.filter((error) => error.date > minimumPastDate)
+}
+
 export const headerReducer = createSlice({
     name: 'header',
     initialState,
     reducers: {
         location: locationImpl,
         clear: clearImpl,
-        loggedUser: loggedUserImpl
+        loggedUser: loggedUserImpl,
+        addError: addErrorImpl,
+        filterExpiredErrors: filterExpiredErrorsImpl,
     }
 })
 
 export const {
     location,
     clear,
-    loggedUser
+    loggedUser,
+    addError,
+    filterExpiredErrors,
 } = headerReducer.actions
 

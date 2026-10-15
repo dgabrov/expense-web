@@ -1,10 +1,12 @@
 import {configureStore} from "@reduxjs/toolkit";
 import {headerReducer} from "./header.ts";
 import {useDispatch, useSelector} from "react-redux";
+import {businessReducer} from "./business.ts";
 
 export const store = configureStore({
     reducer: {
-        header: headerReducer.reducer
+        header: headerReducer.reducer,
+        busines: businessReducer.reducer
     }
 })
 
