@@ -1,3 +1,9 @@
+export interface ErrorMessage {
+    code: string
+    message: string
+    date: number
+}
+
 export interface Account {
     id: string
     name: string

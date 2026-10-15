@@ -1,14 +1,16 @@
-import {Location, type LoggedUser} from "../data.ts";
+import {type ErrorMessage, Location, type LoggedUser} from "../data.ts";
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
 
 export interface HeaderStore {
     loggedUser: LoggedUser | null
     location: string
+    errors: ErrorMessage[]
 }
 
 const initialState : HeaderStore = {
     loggedUser: null,
-    location: Location.login
+    location: Location.login,
+    errors: []
 }
 
 const locationImpl = (store: HeaderStore, data: PayloadAction<string>)=> {
