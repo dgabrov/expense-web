@@ -1,16 +1,18 @@
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import type {Group, Transaction} from "../data.ts";
+import type {EditTransaction, Group, Transaction} from "../data.ts";
 
 export interface BusinessStore {
     version: string
     group: Group | null
     deleteTransactions: Transaction[]
+    editTransaction: EditTransaction
 }
 
 const initialState : BusinessStore = {
     version: '',
     group: null,
-    deleteTransactions: []
+    deleteTransactions: [],
+    editTransaction: {adding: true, id: ''}
 }
 
 const setVersionImpl = (store: BusinessStore, data: PayloadAction<string>)=> {
@@ -25,13 +27,18 @@ const setDeleteTransactionsImpl = (store: BusinessStore, data: PayloadAction<Tra
     store.deleteTransactions = data.payload
 }
 
+const setEditTransactionImpl = (store: BusinessStore, data: PayloadAction<EditTransaction>)=> {
+    store.editTransaction = data.payload
+}
+
 export const businessReducer = createSlice({
     name: 'business',
     initialState,
     reducers: {
         setVersion: setVersionImpl,
         setGroup: setGroupImpl,
-        setDeleteTransactions: setDeleteTransactionsImpl
+        setDeleteTransactions: setDeleteTransactionsImpl,
+        setEditTransaction: setEditTransactionImpl
     }
 })
 
@@ -39,4 +46,5 @@ export const {
     setVersion,
     setGroup,
     setDeleteTransactions,
+    setEditTransaction
 } = businessReducer.actions

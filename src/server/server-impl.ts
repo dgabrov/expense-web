@@ -1,5 +1,5 @@
 import type {Servr} from "./servr.ts";
-import type {Account, Category, CompleteGroup, Group} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group, Transaction} from "../data.ts";
 
 export class ServerImpl implements Servr {
     async version(): Promise<string> {
@@ -49,6 +49,11 @@ export class ServerImpl implements Servr {
     getCompleteGroups(): Promise<CompleteGroup[]> {
         // TODO
         return Promise.resolve([]);
+    }
+
+    getTransactionById(_id: string): Promise<Transaction | null> {
+        // TODO
+        return Promise.resolve(null);
     }
 
 }

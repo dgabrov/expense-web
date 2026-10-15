@@ -13,3 +13,6 @@ done Categories.tsx
 done Groups.tsx
 done Header.tsx
 done Login.tsx
+
+at the end:
+look for then without catch and then submit some error with the error, see how you process

@@ -57,3 +57,7 @@ export const Location = {
     transactions: "transactions"
 }
 
+export interface EditTransaction {
+    id: string
+    adding: boolean
+}
