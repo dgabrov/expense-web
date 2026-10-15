@@ -17,34 +17,45 @@ export const EditTransaction = () => {
     const [name, setName] = useState('')
     const [groupId, setGroupId] = useState('')
     const [categoryId, setCategoryId] = useState('')
+    const [categoryGroupMap, setCategoryGroupMap] = useState<{[key: string]: string}>({})
 
     useEffect(() => {
-        getServr().getCompleteGroups().then((newGroups) => setGroups(newGroups))
-    }, [])
+        getServr().getCompleteGroups().then((newGroups) => {
+            setGroups(newGroups)
 
-    useEffect(() => {
-        if (adding) {
-            return
-        }
-
-        getServr().getTransactionById(id).then((transaction) => {
-            if (!transaction) {
-                return
-            }
-
-            setDate(formatDate(transaction.date))
-            setAmount(transaction.amount.toString())
-            setName(transaction.name)
-            setCategoryId(transaction.categoryId ?? '')
+            const map: {[key: string]: string} = {}
+            newGroups.forEach((group) => group.categories.forEach((category) => {
+                map[category.id] = group.id
+            }))
+            setCategoryGroupMap(map)
         })
+
+        if (!adding) {
+            getServr().getTransactionById(id).then((transaction) => {
+                if (!transaction) {
+                    return
+                }
+
+                setDate(formatDate(transaction.date))
+                setAmount(transaction.amount.toString())
+                setName(transaction.name)
+                setCategoryId(transaction.categoryId ?? '')
+            })
+        }
     }, [adding, id])
 
     // Group of the saved category, used until the user picks a group themselves
-    const savedGroupId = groups.find((group) => group.categories.some((category) => category.id === categoryId))?.id ?? ''
-    const selectedGroupId = groups.some((group) => group.id === groupId) ? groupId : (savedGroupId || groups[0]?.id || '')
+    const savedGroupId = categoryGroupMap[categoryId] ?? ''
+
+    const selectedGroupId = adding
+        ? (groupId || groups[0]?.id || '')
+        : (groupId || savedGroupId)
 
     const categories = groups.find((group) => group.id === selectedGroupId)?.categories ?? []
-    const selectedCategoryId = categories.some((category) => category.id === categoryId) ? categoryId : (categories[0]?.id ?? '')
+
+    const selectedCategoryId = adding
+        ? (categoryId || categories[0]?.id || '')
+        : categoryId
 
     const changeGroup = (newGroupId: string) => {
         setGroupId(newGroupId)

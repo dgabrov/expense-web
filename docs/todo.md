@@ -2,10 +2,10 @@ code the following pages:
 
 Cash.tsx
 Csv.tsx
-EditTransaction.tsx
 Reports.tsx
 Transactions.tsx
 
+done EditTransaction.tsx
 done CDelTransaction.tsx
 done NotFound.tsx
 done Accounts.tsx
