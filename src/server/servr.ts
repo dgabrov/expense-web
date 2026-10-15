@@ -2,18 +2,18 @@ import {ServerMock} from "./server-mock.ts";
 import type {Account, Category, Group} from "../data.ts";
 
 export interface Servr {
-    version: () => string
-    getAccounts: () => Account[]
-    addAccount: (account: Account) => void
-    updateAccount: (account: Account) => void
+    version: () => Promise<string>
+    getAccounts: () => Promise<Account[]>
+    addAccount: (account: Account) => Promise<void>
+    updateAccount: (account: Account) => Promise<void>
 
-    getGroups: () => Group[]
-    addGroup: (group: Group) => void
-    updateGroup: (group: Group) => void
+    getGroups: () => Promise<Group[]>
+    addGroup: (group: Group) => Promise<void>
+    updateGroup: (group: Group) => Promise<void>
 
-    getCategories: () => Category[]
-    addCategory: (category: Category) => void
-    updateCategory: (category: Category) => void
+    getCategories: (groupId: string) => Promise<Category[]>
+    addCategory: (category: Category) => Promise<void>
+    updateCategory: (category: Category) => Promise<void>
 
 
 }

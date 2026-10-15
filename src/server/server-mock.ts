@@ -2,46 +2,46 @@ import type {Servr} from "./servr.ts";
 import type {Account, Category, Group} from "../data.ts";
 
 export class ServerMock implements Servr {
-    version(): string {
+    async version(): Promise<string> {
         return "1.0";
     }
 
-    addAccount(_account: Account): void {
+    async addAccount(_account: Account): Promise<void> {
         // TODO
     }
 
-    addCategory(_category: Category): void {
+    async addCategory(_category: Category): Promise<void> {
         // TODO
     }
 
-    addGroup(_group: Group): void {
+    async addGroup(_group: Group): Promise<void> {
         // TODO
     }
 
-    getAccounts(): Account[] {
-        // TODO
-        return [];
-    }
-
-    getCategories(): Category[] {
+    async getAccounts(): Promise<Account[]> {
         // TODO
         return [];
     }
 
-    getGroups(): Group[] {
+    async getCategories(_groupId: string): Promise<Category[]> {
         // TODO
         return [];
     }
 
-    updateAccount(_account: Account): void {
+    async getGroups(): Promise<Group[]> {
+        // TODO
+        return [];
+    }
+
+    async updateAccount(_account: Account): Promise<void> {
         // TODO
     }
 
-    updateCategory(_category: Category): void {
+    async updateCategory(_category: Category): Promise<void> {
         // TODO
     }
 
-    updateGroup(_group: Group): void {
+    async updateGroup(_group: Group): Promise<void> {
         // TODO
     }
 

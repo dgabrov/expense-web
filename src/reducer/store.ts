@@ -6,7 +6,7 @@ import {businessReducer} from "./business.ts";
 export const store = configureStore({
     reducer: {
         header: headerReducer.reducer,
-        busines: businessReducer.reducer
+        business: businessReducer.reducer
     }
 })
 
