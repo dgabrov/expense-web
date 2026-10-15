@@ -20,6 +20,10 @@ export interface Category {
     name: string
 }
 
+export interface CompleteGroup extends Group {
+    categories: Category[]
+}
+
 export interface LoginData {
     login: string
     password: string

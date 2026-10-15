@@ -1,5 +1,5 @@
 import {ServerMock} from "./server-mock.ts";
-import type {Account, Category, Group} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group} from "../data.ts";
 
 export interface Servr {
     version: () => Promise<string>
@@ -15,7 +15,7 @@ export interface Servr {
     addCategory: (category: Category) => Promise<void>
     updateCategory: (category: Category) => Promise<void>
 
-
+    getCompleteGroups: () => Promise<CompleteGroup[]>
 }
 
 const servr = new ServerMock()

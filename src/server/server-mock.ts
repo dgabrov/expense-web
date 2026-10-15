@@ -1,5 +1,5 @@
 import type {Servr} from "./servr.ts";
-import type {Account, Category, Group} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group} from "../data.ts";
 
 export class ServerMock implements Servr {
     async version(): Promise<string> {
@@ -43,6 +43,11 @@ export class ServerMock implements Servr {
 
     async updateGroup(_group: Group): Promise<void> {
         // TODO
+    }
+
+    getCompleteGroups(): Promise<CompleteGroup[]> {
+        // TODO
+        return Promise.resolve([]);
     }
 
 }
