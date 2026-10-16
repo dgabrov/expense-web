@@ -49,6 +49,7 @@ export const Groups = () => {
                 </tr>
                 </thead>
                 <tbody>
+                {groups.length === 0 && <tr><td colSpan={3}>no items...</td></tr>}
                 {groups.map((group) => (
                     <tr key={group.id}>
                         <td><input type="checkbox" checked={selected.includes(group.id)} onChange={() => toggleOne(group.id)}/></td>

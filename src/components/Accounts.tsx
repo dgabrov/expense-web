@@ -48,6 +48,7 @@ export const Accounts = () => {
                 </tr>
                 </thead>
                 <tbody>
+                {accounts.length === 0 && <tr><td colSpan={3}>no items...</td></tr>}
                 {accounts.map((account) => (
                     <tr key={account.id}>
                         <td><input type="checkbox" checked={selected.includes(account.id)} onChange={() => toggleOne(account.id)}/></td>

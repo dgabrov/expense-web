@@ -54,6 +54,7 @@ export const Categories = () => {
                 </tr>
                 </thead>
                 <tbody>
+                {categories.length === 0 && <tr><td colSpan={2}>no items...</td></tr>}
                 {categories.map((category) => (
                     <tr key={category.id}>
                         <td><input type="checkbox" checked={selected.includes(category.id)} onChange={() => toggleOne(category.id)}/></td>
