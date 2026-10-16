@@ -6,13 +6,17 @@ export interface BusinessStore {
     group: Group | null
     deleteTransactions: Transaction[]
     editTransaction: EditTransaction
+    transactions: Transaction[]
+    selected: string[]
 }
 
 const initialState : BusinessStore = {
     version: '',
     group: null,
     deleteTransactions: [],
-    editTransaction: {adding: true, id: ''}
+    editTransaction: {adding: true, id: ''},
+    transactions: [],
+    selected: []
 }
 
 const setVersionImpl = (store: BusinessStore, data: PayloadAction<string>)=> {
@@ -31,6 +35,31 @@ const setEditTransactionImpl = (store: BusinessStore, data: PayloadAction<EditTr
     store.editTransaction = data.payload
 }
 
+const setTransactionsImpl = (store: BusinessStore, data: PayloadAction<Transaction[]>) => {
+    store.transactions = data.payload
+}
+
+const addTransactionImpl = (store: BusinessStore, data: PayloadAction<Transaction>) => {
+    store.transactions.push(data.payload)
+}
+
+const updateTransactionImpl = (store: BusinessStore, data: PayloadAction<Transaction>) => {
+    const transaction = data.payload
+    const id = transaction.id
+
+    store.transactions = store.transactions.map((txn) => txn.id === id ? transaction : txn)
+}
+
+const deleteTransactionImpl = (store: BusinessStore, data: PayloadAction<string>) => {
+    const id = data.payload
+
+    store.transactions = store.transactions.filter((txn) => txn.id !== id)
+}
+
+const setSelectedTransactionsImpl = (store: BusinessStore, data: PayloadAction<string[]>)=> {
+    store.selected = data.payload
+}
+
 export const businessReducer = createSlice({
     name: 'business',
     initialState,
@@ -38,7 +67,13 @@ export const businessReducer = createSlice({
         setVersion: setVersionImpl,
         setGroup: setGroupImpl,
         setDeleteTransactions: setDeleteTransactionsImpl,
-        setEditTransaction: setEditTransactionImpl
+        setEditTransaction: setEditTransactionImpl,
+        setTransactions: setTransactionsImpl,
+        addTransaction: addTransactionImpl,
+        updateTransaction: updateTransactionImpl,
+        deleteTransaction: deleteTransactionImpl,
+        setSelectedTransactions: setSelectedTransactionsImpl
+
     }
 })
 
@@ -46,5 +81,10 @@ export const {
     setVersion,
     setGroup,
     setDeleteTransactions,
-    setEditTransaction
+    setEditTransaction,
+    setTransactions,
+    addTransaction,
+    updateTransaction,
+    deleteTransaction,
+    setSelectedTransactions
 } = businessReducer.actions
