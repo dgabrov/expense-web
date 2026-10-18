@@ -1,8 +1,11 @@
 import {ServerMock} from "./server-mock.ts";
-import type {Account, Category, CompleteGroup, Group, Transaction} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, Transaction} from "../data.ts";
 
 export interface Servr {
     version: () => Promise<string>
+
+    login: (login: LoginData) => Promise<LoggedUser>
+
     getAccounts: () => Promise<Account[]>
     addAccount: (account: Account) => Promise<void>
     updateAccount: (account: Account) => Promise<void>
@@ -18,6 +21,8 @@ export interface Servr {
     getCompleteGroups: () => Promise<CompleteGroup[]>
 
     getTransactionById: (id: string) => Promise<Transaction|null>
+
+    logout(): Promise<void>;
 }
 
 const servr = new ServerMock()

@@ -1,4 +1,6 @@
 import type {CompleteGroup} from "../data.ts";
+import type {AppDispatch} from "../reducer/store.ts";
+import {addError} from "../reducer/header.ts";
 
 export const formatDate = (date: Date) => new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})
 
@@ -36,4 +38,13 @@ export const getCategoryName = (categoryId: string | null, completeGroups: Compl
     }
 
     return ''
+}
+
+export function processError(dispatch: AppDispatch, e: any) {
+
+    if (e instanceof Error) {
+        dispatch(addError(e.message))
+    } else {
+        dispatch(addError('' + e))
+    }
 }

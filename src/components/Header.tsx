@@ -1,9 +1,12 @@
 import {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
-import {filterExpiredErrors} from "../reducer/header.ts";
+import {clear, filterExpiredErrors, setLocation} from "../reducer/header.ts";
+import {getServr} from "../server/servr.ts";
+import {Location} from "../data.ts";
 
 export const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false)
+
     const dispatch = useAppDispatch()
 
     useEffect(() => {
@@ -14,40 +17,44 @@ export const Header = () => {
         return () => clearInterval(interval)
     }, [])
 
-    const logout = (e: any) => {
+    const logout = async (e: any) => {
         e.preventDefault()
 
-        // TODO
+        try {
+            dispatch(clear())
+
+            // attempt to log out on the server side, to delete the cookie
+            await getServr().logout()
+        } catch (e: any) {
+
+            // do nothing just log the error
+            console.log(`error while logging out: ${e.message}`)
+        }
     }
 
     const transactions = (e: any) => {
         e.preventDefault()
-
-        // TODO
+        dispatch(setLocation(Location.transactions))
     }
 
     const groups = (e: any) => {
         e.preventDefault()
-
-        // TODO
+        dispatch(setLocation(Location.groups))
     }
 
     const reports = (e: any) => {
         e.preventDefault()
-
-        // TODO
+        dispatch(setLocation(Location.reports))
     }
 
     const upload = (e: any) => {
         e.preventDefault()
-
-        // TODO
+        dispatch(setLocation(Location.csv))
     }
 
     const cash = (e: any) => {
         e.preventDefault()
-
-        // TODO
+        dispatch(setLocation(Location.cash))
     }
 
     const errors = useAppSelector((store) => store.header.errors)

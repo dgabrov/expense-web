@@ -13,7 +13,7 @@ const initialState : HeaderStore = {
     errors: []
 }
 
-const locationImpl = (store: HeaderStore, data: PayloadAction<string>)=> {
+const setLocationImpl = (store: HeaderStore, data: PayloadAction<string>)=> {
     store.location = data.payload;
 }
 
@@ -43,7 +43,7 @@ export const headerReducer = createSlice({
     name: 'header',
     initialState,
     reducers: {
-        location: locationImpl,
+        setLocation: setLocationImpl,
         clear: clearImpl,
         loggedUser: loggedUserImpl,
         addError: addErrorImpl,
@@ -52,7 +52,7 @@ export const headerReducer = createSlice({
 })
 
 export const {
-    location,
+    setLocation,
     clear,
     loggedUser,
     addError,

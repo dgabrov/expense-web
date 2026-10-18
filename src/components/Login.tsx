@@ -1,6 +1,10 @@
 import {useState} from "react";
-import {addError} from "../reducer/header.ts";
 import {useAppDispatch} from "../reducer/store.ts";
+import {processError} from "../util/util.ts";
+import type {LoginData} from "../data.ts";
+import {getServr} from "../server/servr.ts";
+import {loggedUser} from "../reducer/header.ts";
+
 
 export const Login = () => {
     const dispatch = useAppDispatch()
@@ -16,10 +20,19 @@ export const Login = () => {
         setPassword(e.target.value)
     }
 
-    const triggerLogin = () => {
-        // TODO
+    const triggerLogin = async () => {
+        try {
+            const loginData : LoginData = {
+                login, password
+            }
 
-        dispatch(addError('la umbra nookului: ' + new Date()))
+            const lgUser = await getServr().login(loginData)
+
+            // login was ok, proceeding to the page with the transactions or whatever
+            dispatch(loggedUser(lgUser))
+        } catch(e: any) {
+            processError(dispatch, e)
+        }
     }
 
     return (

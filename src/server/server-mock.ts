@@ -1,5 +1,5 @@
 import type {Servr} from "./servr.ts";
-import type {Account, Category, CompleteGroup, Group, Transaction} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, Transaction} from "../data.ts";
 
 // Mock ids are v7-shaped guids, hardcoded so they stay stable between reloads
 const accounts: Account[] = [
@@ -98,6 +98,26 @@ export class ServerMock implements Servr {
     getTransactionById(id: string): Promise<Transaction|null> {
         const transaction = transactions.find((item) => item.id === id);
         return Promise.resolve(transaction ? structuredClone(transaction) : null);
+    }
+
+    login(loginData: LoginData): Promise<LoggedUser> {
+        const login = loginData.login;
+
+        if(login === 'test'){
+            return Promise.resolve({
+                login: 'test',
+                name: 'Test Name',
+                id: 'idhere'
+            })
+        } else {
+            throw new Error('invalid credentials')
+        }
+    }
+
+    logout(): Promise<void> {
+        console.log("logout")
+
+        return Promise.resolve(undefined)
     }
 
 }
