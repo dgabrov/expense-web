@@ -88,6 +88,26 @@ export class ServerMock implements Servr {
         }
     }
 
+    async deleteCategories(ids: string[]): Promise<void> {
+        if (transactions.some((transaction) => transaction.categoryId !== null && ids.includes(transaction.categoryId))) {
+            throw new Error('category has transactions');
+        }
+
+        for (let i = categories.length - 1; i >= 0; i--) {
+            if (ids.includes(categories[i].id)) {
+                categories.splice(i, 1);
+            }
+        }
+    }
+
+    async deleteTransactions(ids: string[]): Promise<void> {
+        for (let i = transactions.length - 1; i >= 0; i--) {
+            if (ids.includes(transactions[i].id)) {
+                transactions.splice(i, 1);
+            }
+        }
+    }
+
     getCompleteGroups(): Promise<CompleteGroup[]> {
         return Promise.resolve(structuredClone(groups.map((group) => ({
             ...group,

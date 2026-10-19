@@ -33,6 +33,9 @@ export class ServerImpl implements Servr {
     async updateCategory(_category: Category): Promise<void> {
     }
 
+    async deleteCategories(_ids: string[]): Promise<void> {
+    }
+
     async updateGroup(_group: Group): Promise<void> {
     }
 
@@ -40,6 +43,9 @@ export class ServerImpl implements Servr {
     }
 
     async deleteGroups(_ids: string[]): Promise<void> {
+    }
+
+    async deleteTransactions(_ids: string[]): Promise<void> {
     }
 
     getCompleteGroups(): Promise<CompleteGroup[]> {

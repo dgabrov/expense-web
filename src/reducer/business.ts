@@ -50,10 +50,10 @@ const updateTransactionImpl = (store: BusinessStore, data: PayloadAction<Transac
     store.transactions = store.transactions.map((txn) => txn.id === id ? transaction : txn)
 }
 
-const deleteTransactionImpl = (store: BusinessStore, data: PayloadAction<string>) => {
-    const id = data.payload
+const deleteTransactionsImpl = (store: BusinessStore, data: PayloadAction<string[]>) => {
+    const ids = data.payload
 
-    store.transactions = store.transactions.filter((txn) => txn.id !== id)
+    store.transactions = store.transactions.filter((txn) => !ids.includes(txn.id))
 }
 
 const setSelectedTransactionsImpl = (store: BusinessStore, data: PayloadAction<string[]>)=> {
@@ -71,7 +71,7 @@ export const businessReducer = createSlice({
         setTransactions: setTransactionsImpl,
         addTransaction: addTransactionImpl,
         updateTransaction: updateTransactionImpl,
-        deleteTransaction: deleteTransactionImpl,
+        deleteTransactions: deleteTransactionsImpl,
         setSelectedTransactions: setSelectedTransactionsImpl
 
     }
@@ -85,6 +85,6 @@ export const {
     setTransactions,
     addTransaction,
     updateTransaction,
-    deleteTransaction,
+    deleteTransactions,
     setSelectedTransactions
 } = businessReducer.actions

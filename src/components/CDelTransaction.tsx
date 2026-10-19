@@ -1,10 +1,14 @@
-import {useAppSelector} from "../reducer/store.ts";
+import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
 import {useEffect, useState} from "react";
+import {Location} from "../data.ts";
 import type {Account, CompleteGroup} from "../data.ts";
 import {getServr} from "../server/servr.ts";
-import {formatDate, getCategoryName} from "../util/util.ts";
+import {formatDate, getCategoryName, processError} from "../util/util.ts";
+import {setLocation} from "../reducer/header.ts";
+import {deleteTransactions, setSelectedTransactions} from "../reducer/business.ts";
 
 export const CDelTransaction = () => {
+    const dispatch = useAppDispatch()
 
     const transactions = useAppSelector((store) => store.business.deleteTransactions)
 
@@ -18,12 +22,23 @@ export const CDelTransaction = () => {
 
     const accountName = (id: string) => accounts.find((account) => account.id === id)?.name ?? ''
 
-    const confirmDelete = () => {
-        // TODO
+    const confirmDelete = async () => {
+        try {
+            const ids = transactions.map((transaction) => transaction.id)
+            await getServr().deleteTransactions(ids)
+
+            // now remove the transactions from the store, and nothing is selected anymore
+            dispatch(deleteTransactions(ids))
+            dispatch(setSelectedTransactions([]))
+
+            dispatch(setLocation(Location.transactions))
+        } catch (e: any) {
+            processError(dispatch, e)
+        }
     }
 
     const cancelDelete = () => {
-        // TODO
+        dispatch(setLocation(Location.transactions))
     }
 
     return (

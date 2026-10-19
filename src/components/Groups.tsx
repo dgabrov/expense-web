@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import {getServr} from "../server/servr.ts";
+import {Location} from "../data.ts";
 import type {Group} from "../data.ts";
-import {addError} from "../reducer/header.ts";
+import {addError, setLocation} from "../reducer/header.ts";
+import {setGroup} from "../reducer/business.ts";
 import {useAppDispatch} from "../reducer/store.ts";
 import {processError} from "../util/util.ts";
 import {v7} from "uuid";
@@ -34,6 +36,15 @@ export const Groups = () => {
         setSelected((current) =>
             current.includes(id) ? current.filter((x) => x !== id) : [...current, id]
         )
+    }
+
+    const categoriesOf = (group: Group) => {
+        return (ev: any) => {
+            ev.preventDefault()
+
+            dispatch(setGroup(group))
+            dispatch(setLocation(Location.categories))
+        }
     }
 
     const onHide = () => {
@@ -134,7 +145,7 @@ export const Groups = () => {
                     <tr key={group.id}>
                         <td><input type="checkbox" checked={selected.includes(group.id)} onChange={() => toggleOne(group.id)}/></td>
                         <td>{group.name}</td>
-                        <td><a href="#">categories</a></td>
+                        <td><a href="#" onClick={categoriesOf(group)}>categories</a></td>
                         <td><a href='#' onClick={editGroup(group.id)}>edit</a></td>
                     </tr>
                 ))}
