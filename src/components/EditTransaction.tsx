@@ -1,11 +1,14 @@
-import {useAppSelector} from "../reducer/store.ts";
+import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
 import {useEffect, useState} from "react";
 import type {CompleteGroup} from "../data.ts";
+import {Location} from "../data.ts"
 import {getServr} from "../server/servr.ts";
 import {formatDate} from "../util/util.ts";
+import {setLocation} from "../reducer/header.ts";
 
 export const EditTransaction = () => {
 
+    const dispatch = useAppDispatch()
     const editTransaction = useAppSelector((store) => store.business.editTransaction)
 
     const id = editTransaction.id
@@ -69,8 +72,7 @@ export const EditTransaction = () => {
     }
 
     const cancel = () => {
-        console.log(id)
-        // TODO
+        dispatch(setLocation(Location.transactions))
     }
 
     return (
