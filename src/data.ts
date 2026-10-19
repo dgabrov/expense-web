@@ -61,3 +61,12 @@ export interface EditTransaction {
     id: string
     adding: boolean
 }
+
+export interface DateFormat {
+    languageValue: string
+    displayValue: string
+}
+
+export interface Line {
+    items: string[]
+}

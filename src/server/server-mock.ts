@@ -120,4 +120,16 @@ export class ServerMock implements Servr {
         return Promise.resolve(undefined)
     }
 
+    async deleteAccounts(ids: string[]): Promise<void> {
+        if (transactions.some((transaction) => ids.includes(transaction.accountId))) {
+            throw new Error('account has transactions');
+        }
+
+        for (let i = accounts.length - 1; i >= 0; i--) {
+            if (ids.includes(accounts[i].id)) {
+                accounts.splice(i, 1);
+            }
+        }
+    }
+
 }

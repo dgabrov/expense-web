@@ -9,6 +9,7 @@ export interface Servr {
     getAccounts: () => Promise<Account[]>
     addAccount: (account: Account) => Promise<void>
     updateAccount: (account: Account) => Promise<void>
+    deleteAccounts: (ids: string[]) => Promise<void>
 
     getGroups: () => Promise<Group[]>
     addGroup: (group: Group) => Promise<void>

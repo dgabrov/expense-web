@@ -1,4 +1,4 @@
-import type {CompleteGroup} from "../data.ts";
+import type {CompleteGroup, DateFormat} from "../data.ts";
 import type {AppDispatch} from "../reducer/store.ts";
 import {addError} from "../reducer/header.ts";
 
@@ -47,4 +47,15 @@ export function processError(dispatch: AppDispatch, e: any) {
     } else {
         dispatch(addError('' + e))
     }
+}
+
+export const getFormats = () : DateFormat[] => {
+    return [
+        { languageValue: 'Jan 2, 2006', displayValue: 'MMM d, yyyy' },
+        { languageValue: 'Jan2, 2006', displayValue: 'MMMd, yyyy' },
+        { languageValue: 'Jan 2,2006', displayValue: 'MMM d,yyyy' },
+        { languageValue: 'Jan2,2006', displayValue: 'MMMd,yyyy' },
+        { languageValue: '2006-01-02', displayValue: 'yyyy-MM-dd' },
+        { languageValue: '01/02/2006', displayValue: 'MM/dd/yyyy' }
+    ]
 }
