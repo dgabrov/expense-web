@@ -2,9 +2,9 @@ import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
 import {setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
 import {useEffect, useState} from "react";
 import {Location} from "../data.ts";
-import type {Account, CompleteGroup} from "../data.ts";
+import type {Account, CompleteGroup, SearchData} from "../data.ts";
 import {getServr} from "../server/servr.ts";
-import {formatDate, getCategoryName} from "../util/util.ts";
+import {formatDate, getCategoryName, parseAmount, parseDate, processError} from "../util/util.ts";
 import {addError, setLocation} from "../reducer/header.ts";
 import {v7} from "uuid";
 
@@ -42,8 +42,21 @@ export const Transactions = () => {
         ))
     }
 
-    const searchTransactions = () => {
-        // TODO
+    const searchTransactions = async () => {
+        try {
+            const searchData: SearchData = {
+                search: search.trim() || null,
+                accountFilter: accountFilter.trim() || null,
+                dateFrom: dateFrom.trim() ? parseDate(dateFrom) : null,
+                dateTo: dateTo.trim() ? parseDate(dateTo) : null,
+                amountFrom: parseAmount(amountFrom),
+                amountTo: parseAmount(amountTo)
+            }
+
+            dispatch(setTransactions(await getServr().searchTransactions(searchData)))
+        } catch (e: any) {
+            processError(dispatch, e)
+        }
     }
 
     const addTransaction = () => {

@@ -1,5 +1,5 @@
 import type {Servr} from "./servr.ts";
-import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, Transaction} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, SearchData, Transaction} from "../data.ts";
 
 export class ServerImpl implements Servr {
     async version(): Promise<string> {
@@ -56,6 +56,10 @@ export class ServerImpl implements Servr {
     }
 
     async updateTransaction(_transaction: Transaction): Promise<void> {
+    }
+
+    async searchTransactions(_search: SearchData): Promise<Transaction[]> {
+        return [];
     }
 
     getTransactionById(_id: string): Promise<Transaction | null> {

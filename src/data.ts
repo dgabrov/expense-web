@@ -44,6 +44,15 @@ export interface Transaction {
     categoryId: string | null
 }
 
+export interface SearchData {
+    search: string | null
+    accountFilter: string | null
+    dateFrom: Date | null
+    dateTo: Date | null
+    amountFrom: number | null
+    amountTo: number | null
+}
+
 export const Location = {
     login: "login",
     accounts: "accounts",

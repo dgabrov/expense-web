@@ -29,7 +29,22 @@ export const parseDate = (text: string): Date => {
     return date
 }
 
-export const getCategoryName = (categoryId: string | null, completeGroups: CompleteGroup[]) => {
+// Empty text means no value, negative numbers are fine
+export const parseAmount = (text: string): number | null => {
+    const trimmed = text.trim()
+    if (trimmed === '') {
+        return null
+    }
+
+    const value = Number(trimmed)
+    if (isNaN(value)) {
+        throw new Error(`Cannot parse amount: "${text}"`)
+    }
+
+    return value
+}
+
+export const getCategoryName =(categoryId: string | null, completeGroups: CompleteGroup[]) => {
     for (const group of completeGroups) {
         const category = group.categories.find((category) => category.id === categoryId)
         if (category) {

@@ -1,5 +1,5 @@
 import type {Servr} from "./servr.ts";
-import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, Transaction} from "../data.ts";
+import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, SearchData, Transaction} from "../data.ts";
 
 // Mock ids are v7-shaped guids, hardcoded so they stay stable between reloads
 const accounts: Account[] = [
@@ -124,6 +124,42 @@ export class ServerMock implements Servr {
         if (index !== -1) {
             transactions[index] = structuredClone(transaction);
         }
+    }
+
+    async searchTransactions(search: SearchData): Promise<Transaction[]> {
+        const text = search.search?.toLowerCase() ?? null
+        const accountText = search.accountFilter?.toLowerCase() ?? null
+
+        const found = transactions.filter((transaction) => {
+            if (text !== null && !transaction.name.toLowerCase().includes(text)) {
+                return false
+            }
+
+            if (accountText !== null) {
+                const accountName = accounts.find((account) => account.id === transaction.accountId)?.name ?? ''
+                if (!accountName.toLowerCase().includes(accountText)) {
+                    return false
+                }
+            }
+
+            if (search.dateFrom !== null && transaction.date.getTime() < search.dateFrom.getTime()) {
+                return false
+            }
+            if (search.dateTo !== null && transaction.date.getTime() > search.dateTo.getTime()) {
+                return false
+            }
+
+            if (search.amountFrom !== null && transaction.amount < search.amountFrom) {
+                return false
+            }
+            if (search.amountTo !== null && transaction.amount > search.amountTo) {
+                return false
+            }
+
+            return true
+        })
+
+        return structuredClone(found);
     }
 
     getTransactionById(id: string): Promise<Transaction|null> {
