@@ -26,6 +26,8 @@ export interface Servr {
     getCompleteGroups: () => Promise<CompleteGroup[]>
 
     getTransactionById: (id: string) => Promise<Transaction|null>
+    addTransaction: (transaction: Transaction) => Promise<void>
+    updateTransaction: (transaction: Transaction) => Promise<void>
 
     logout(): Promise<void>;
 }

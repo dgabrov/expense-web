@@ -52,6 +52,12 @@ export class ServerImpl implements Servr {
         return Promise.resolve([]);
     }
 
+    async addTransaction(_transaction: Transaction): Promise<void> {
+    }
+
+    async updateTransaction(_transaction: Transaction): Promise<void> {
+    }
+
     getTransactionById(_id: string): Promise<Transaction | null> {
         return Promise.resolve(null);
     }

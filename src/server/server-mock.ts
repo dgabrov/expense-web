@@ -115,6 +115,17 @@ export class ServerMock implements Servr {
         }))));
     }
 
+    async addTransaction(transaction: Transaction): Promise<void> {
+        transactions.push(structuredClone(transaction));
+    }
+
+    async updateTransaction(transaction: Transaction): Promise<void> {
+        const index = transactions.findIndex((item) => item.id === transaction.id);
+        if (index !== -1) {
+            transactions[index] = structuredClone(transaction);
+        }
+    }
+
     getTransactionById(id: string): Promise<Transaction|null> {
         const transaction = transactions.find((item) => item.id === id);
         return Promise.resolve(transaction ? structuredClone(transaction) : null);

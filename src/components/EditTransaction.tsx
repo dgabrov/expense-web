@@ -1,10 +1,11 @@
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
 import {useEffect, useState} from "react";
-import type {CompleteGroup} from "../data.ts";
+import type {Account, CompleteGroup, Transaction} from "../data.ts";
 import {Location} from "../data.ts"
 import {getServr} from "../server/servr.ts";
-import {formatDate} from "../util/util.ts";
-import {setLocation} from "../reducer/header.ts";
+import {formatDate, processError} from "../util/util.ts";
+import {addError, setLocation} from "../reducer/header.ts";
+import {addTransaction, updateTransaction} from "../reducer/business.ts";
 
 export const EditTransaction = () => {
 
@@ -14,15 +15,19 @@ export const EditTransaction = () => {
     const id = editTransaction.id
     const adding = editTransaction.adding
 
+    const [accounts, setAccounts] = useState<Account[]>([])
     const [groups, setGroups] = useState<CompleteGroup[]>([])
     const [date, setDate] = useState('')
     const [amount, setAmount] = useState('')
     const [name, setName] = useState('')
+    const [accountId, setAccountId] = useState('')
     const [groupId, setGroupId] = useState('')
     const [categoryId, setCategoryId] = useState('')
     const [categoryGroupMap, setCategoryGroupMap] = useState<{[key: string]: string}>({})
 
     useEffect(() => {
+        getServr().getAccounts().then((newAccounts) => setAccounts(newAccounts))
+
         getServr().getCompleteGroups().then((newGroups) => {
             setGroups(newGroups)
 
@@ -42,6 +47,7 @@ export const EditTransaction = () => {
                 setDate(formatDate(transaction.date))
                 setAmount(transaction.amount.toString())
                 setName(transaction.name)
+                setAccountId(transaction.accountId)
                 setCategoryId(transaction.categoryId ?? '')
             })
         }
@@ -49,6 +55,10 @@ export const EditTransaction = () => {
 
     // Group of the saved category, used until the user picks a group themselves
     const savedGroupId = categoryGroupMap[categoryId] ?? ''
+
+    const selectedAccountId = adding
+        ? (accountId || accounts[0]?.id || '')
+        : accountId
 
     const selectedGroupId = adding
         ? (groupId || groups[0]?.id || '')
@@ -66,9 +76,49 @@ export const EditTransaction = () => {
         setCategoryId('')
     }
 
-    const save = () => {
-        console.log(id)
-        // TODO
+    const save = async () => {
+        const parsedDate = new Date(date)
+        const parsedAmount = Number(amount)
+
+        if (isNaN(parsedDate.getTime())) {
+            dispatch(addError('Please enter a valid date'))
+            return
+        }
+        if (amount.trim() === '' || isNaN(parsedAmount)) {
+            dispatch(addError('Please enter a valid amount'))
+            return
+        }
+        if (!name.trim()) {
+            dispatch(addError('Please enter a name'))
+            return
+        }
+        if (!selectedAccountId) {
+            dispatch(addError('Please select an account'))
+            return
+        }
+
+        const transaction: Transaction = {
+            id: id,
+            name: name,
+            date: parsedDate,
+            amount: parsedAmount,
+            accountId: selectedAccountId,
+            categoryId: selectedCategoryId || null
+        }
+
+        try {
+            if (adding) {
+                await getServr().addTransaction(transaction)
+                dispatch(addTransaction(transaction))
+            } else {
+                await getServr().updateTransaction(transaction)
+                dispatch(updateTransaction(transaction))
+            }
+
+            dispatch(setLocation(Location.transactions))
+        } catch (e: any) {
+            processError(dispatch, e)
+        }
     }
 
     const cancel = () => {
@@ -84,7 +134,11 @@ export const EditTransaction = () => {
                 <input className="mbottom" type="text" id="login" placeholder="Date" value={date} onChange={(e) => setDate(e.target.value)}/>
 
                 <label htmlFor="account">Account</label>
-                <input className="mbottom" type="text" id="account" placeholder="Account"/>
+                <select id={'account'} value={selectedAccountId} onChange={(e) => setAccountId(e.target.value)}>
+                    {accounts.map((account) => (
+                        <option key={account.id} value={account.id}>{account.name}</option>
+                    ))}
+                </select>
 
                 <label htmlFor="amount">Amount</label>
                 <input className="mbottom" type="text" id="amount" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)}/>
