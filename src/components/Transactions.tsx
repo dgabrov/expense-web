@@ -1,9 +1,12 @@
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
-import {setSelectedTransactions} from "../reducer/business.ts";
+import {setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
 import {useEffect, useState} from "react";
+import {Location} from "../data.ts";
 import type {Account, CompleteGroup} from "../data.ts";
 import {getServr} from "../server/servr.ts";
 import {formatDate, getCategoryName} from "../util/util.ts";
+import {addError, setLocation} from "../reducer/header.ts";
+import {v7} from "uuid";
 
 export const Transactions = () => {
     const transactions = useAppSelector((store) => store.business.transactions)
@@ -44,23 +47,54 @@ export const Transactions = () => {
     }
 
     const addTransaction = () => {
-        // TODO
+        // new transaction, the id is generated here
+        let newId = v7();
+
+        dispatch(setEditTransaction({id: newId, adding: true}))
+        dispatch(setLocation(Location.editTransaction))
     }
 
-    const showUnassigned = () => {
-        // TODO
+    const selectUnassigned = () => {
+        // select only the transactions without a category, the list itself is not changed
+        const unassignedIds = transactions
+            .filter((transaction) => transaction.categoryId === null)
+            .map((transaction) => transaction.id)
+
+        dispatch(setSelectedTransactions(unassignedIds))
     }
 
     const trimTransactions = () => {
-        // TODO
+        // keep only the selected ones on screen, the selection itself stays as it is
+        const filteredTransactions = transactions.filter((transaction) => selected.includes(transaction.id));
+
+        dispatch(setTransactions(filteredTransactions))
     }
 
-    const clearFilters = () => {
-        // TODO
+    const clear = () => {
+        // only the list and the selection, the search fields stay as they are
+        dispatch(setTransactions([]))
+        dispatch(setSelectedTransactions([]))
+    }
+
+    const editTransaction = (id: string) => {
+        return (ev: any) => {
+            ev.preventDefault()
+
+            // existing transaction, not adding
+            dispatch(setEditTransaction({id: id, adding: false}))
+            dispatch(setLocation(Location.editTransaction))
+        }
     }
 
     const removeTransactions = () => {
-        // TODO
+        if (selected.length == 0) {
+            dispatch(addError('Please select at least one transaction to delete'))
+            return
+        }
+
+        // hand the selected transactions over to the confirmation screen
+        dispatch(setDeleteTransactions(transactions.filter((transaction) => selected.includes(transaction.id))))
+        dispatch(setLocation(Location.cDelTransaction))
     }
 
     return (
@@ -96,9 +130,9 @@ export const Transactions = () => {
             <div className="button-group">
                 <button className="filter-btn" onClick={searchTransactions}>Search</button>
                 <button className="filter-btn" onClick={addTransaction}>Add</button>
-                <button className="filter-btn" onClick={showUnassigned}>Unassigned</button>
+                <button className="filter-btn" onClick={selectUnassigned}>Unassigned</button>
                 <button className="filter-btn" onClick={trimTransactions}>Trim</button>
-                <button className="filter-btn" onClick={clearFilters}>Clear</button>
+                <button className="filter-btn" onClick={clear}>Clear</button>
                 <button className="filter-btn" onClick={removeTransactions}>Remove</button>
             </div>
             <table>
@@ -110,10 +144,11 @@ export const Transactions = () => {
                     <td>Amount</td>
                     <td>Name</td>
                     <td>Category</td>
+                    <td>Edit</td>
                 </tr>
                 </thead>
                 <tbody>
-                {transactions.length === 0 && <tr><td colSpan={6}>no items...</td></tr>}
+                {transactions.length === 0 && <tr><td colSpan={7}>no items...</td></tr>}
                 {transactions.map((transaction) => (
                     <tr key={transaction.id}>
                         <td><input type="checkbox" checked={selected.includes(transaction.id)} onChange={() => toggleOne(transaction.id)}/></td>
@@ -122,6 +157,7 @@ export const Transactions = () => {
                         <td>{transaction.amount.toFixed(2)}</td>
                         <td>{transaction.name}</td>
                         <td>{getCategoryName(transaction.categoryId, completeGroups)}</td>
+                        <td><a href='#' onClick={editTransaction(transaction.id)}>edit</a></td>
                     </tr>
                 ))}
                 </tbody>
