@@ -159,7 +159,7 @@ export const Categories = () => {
                 <button className="filter-btn-red" onClick={deleteCategories}>Delete</button>
                 <button className="filter-btn" onClick={addCategory}>Add</button>
             </div>
-            <ConfirmDialog open={confirmDialogOpen} message={'Do you really want to '} onConfirm={onDelete} onHide={onHide}></ConfirmDialog>
+            <ConfirmDialog open={confirmDialogOpen} message={'Do you really want to delete those categories?'} onConfirm={onDelete} onHide={onHide}></ConfirmDialog>
             <EditCategory open={showEdit} message={'Edit Category'} groupName={group.name} name={editName} onNameChange={setEditName} onConfirm={afterEdit} onHide={hideEdit}></EditCategory>
         </div>
     )

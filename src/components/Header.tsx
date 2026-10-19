@@ -37,6 +37,11 @@ export const Header = () => {
         dispatch(setLocation(Location.transactions))
     }
 
+    const accounts = (e: any) => {
+        e.preventDefault()
+        dispatch(setLocation(Location.accounts))
+    }
+
     const groups = (e: any) => {
         e.preventDefault()
         dispatch(setLocation(Location.groups))
@@ -85,6 +90,7 @@ export const Header = () => {
                             isLogged && <ul onClick={() => setMenuOpen(false)}>
                             <li><a href="#" onClick={logout}>Logout</a></li>
                             <li><a href="#" onClick={transactions}>Transactions</a></li>
+                            <li><a href="#" onClick={accounts}>Accounts</a></li>
                             <li><a href="#" onClick={groups}>Groups</a></li>
                             <li><a href="#" onClick={reports}>Reports</a></li>
                             <li><a href="#" onClick={upload}>Upload CSV</a></li>

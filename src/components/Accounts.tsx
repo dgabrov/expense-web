@@ -153,7 +153,7 @@ export const Accounts = () => {
                 <button className="filter-btn-red" onClick={deleteAccounts}>Delete</button>
                 <button className="filter-btn" onClick={addAccount}>Add</button>
             </div>
-            <ConfirmDialog open={confirmDialogOpen} message={'Do you really want to '} onConfirm={onDelete} onHide={onHide}></ConfirmDialog>
+            <ConfirmDialog open={confirmDialogOpen} message={'Do you really want to delete those accounts?'} onConfirm={onDelete} onHide={onHide}></ConfirmDialog>
             <EditAccount open={showEdit} message={'Edit Account'} name={editName} cash={editCash} onNameChange={setEditName} onCashChange={setEditCash} onConfirm={afterEdit} onHide={hideEdit}></EditAccount>
         </div>
     )

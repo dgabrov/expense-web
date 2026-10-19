@@ -156,7 +156,7 @@ export const Groups = () => {
                 <button className="filter-btn-red" onClick={deleteGroups}>Delete</button>
                 <button className="filter-btn" onClick={addGroup}>Add</button>
             </div>
-            <ConfirmDialog open={confirmDialogOpen} message={'Do you really want to '} onConfirm={onDelete} onHide={onHide}></ConfirmDialog>
+            <ConfirmDialog open={confirmDialogOpen} message={'Do you really want to delete those groups?'} onConfirm={onDelete} onHide={onHide}></ConfirmDialog>
             <EditGroup open={showEdit} message={'Edit Group'} name={editName} onNameChange={setEditName} onConfirm={afterEdit} onHide={hideEdit}></EditGroup>
         </div>
     )
