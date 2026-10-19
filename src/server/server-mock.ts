@@ -132,4 +132,16 @@ export class ServerMock implements Servr {
         }
     }
 
+    async deleteGroups(ids: string[]): Promise<void> {
+        if (categories.some((category) => ids.includes(category.groupId))) {
+            throw new Error('group has categories');
+        }
+
+        for (let i = groups.length - 1; i >= 0; i--) {
+            if (ids.includes(groups[i].id)) {
+                groups.splice(i, 1);
+            }
+        }
+    }
+
 }

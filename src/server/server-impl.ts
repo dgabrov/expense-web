@@ -39,6 +39,9 @@ export class ServerImpl implements Servr {
     async deleteAccounts(_ids: string[]): Promise<void> {
     }
 
+    async deleteGroups(_ids: string[]): Promise<void> {
+    }
+
     getCompleteGroups(): Promise<CompleteGroup[]> {
         return Promise.resolve([]);
     }

@@ -14,6 +14,7 @@ export interface Servr {
     getGroups: () => Promise<Group[]>
     addGroup: (group: Group) => Promise<void>
     updateGroup: (group: Group) => Promise<void>
+    deleteGroups: (ids: string[]) => Promise<void>
 
     getCategories: (groupId: string) => Promise<Category[]>
     addCategory: (category: Category) => Promise<void>
