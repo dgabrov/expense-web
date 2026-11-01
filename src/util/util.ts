@@ -7,7 +7,7 @@ export const formatDate = (date: Date) => new Date(date).toLocaleDateString('en-
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
 // Accepts "Jan 12, 2026", "Jan12, 2026" and "Jan12,2026"
-export const parseDate = (text: string): Date => {
+export const parseLongDate = (text: string): Date => {
     const match = /^([A-Za-z]{3})\s*(\d{1,2}),\s*(\d{4})$/.exec(text.trim())
     if (!match) {
         throw new Error(`Cannot parse date: "${text}"`)
