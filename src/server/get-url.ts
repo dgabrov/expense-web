@@ -17,7 +17,7 @@ export const getServerUrl = async (): Promise<string> => {
 
     const config = await response.json();
 
-    serverUrl =  config.url;
+    serverUrl = config.serverURL;
 
     return serverUrl;
 }

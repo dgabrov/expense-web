@@ -1,5 +1,5 @@
-import {ServerMock} from "./server-mock.ts";
 import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, SearchData, Transaction} from "../data.ts";
+import {ServerImpl} from "./server-impl.ts";
 
 export interface Servr {
     version: () => Promise<string>
@@ -33,7 +33,7 @@ export interface Servr {
     logout(): Promise<void>;
 }
 
-const servr = new ServerMock()
+const servr = new ServerImpl()
 
 export const getServr = () : Servr => {
     return servr;

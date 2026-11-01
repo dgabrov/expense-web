@@ -137,7 +137,10 @@ export const Transactions = () => {
                 </div>
                 <div className="search-field">
                     <label>Account:</label>
-                    <input type="text" placeholder="Select account" value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}/>
+                    <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
+                        <option value={''}>Please select account</option>
+                        {accounts.map(account => <option key={account.id} value={account.id}>{account.name}</option>)}
+                    </select>
                 </div>
             </div>
             <div className="button-group">
