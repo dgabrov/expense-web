@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Expenses</title>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo"></div>
+            </div>
+            <nav class="menu" id="menu">
+                <ul>
+                    <li><a href="#">first</a></li>
+                    <li><a href="#">second</a></li>
+                    <li><a href="#">third</a></li>
+                    <li><a href="#">fourth</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user">not logged in</div>
+    </header>
+
+    <div class="container">
+
+        <h1>Transactions</h1>
+        <div class="search-filters">
+            <div class="search-field">
+                <label>Search:</label>
+                <input type="text" placeholder="Search transactions">
+            </div>
+            <div class="search-field search-field-range">
+                <label>Date:</label>
+                <div class="input-range">
+                    <input type="text" placeholder="From">
+                    <span>-</span>
+                    <input type="text" placeholder="To">
+                </div>
+            </div>
+            <div class="search-field search-field-range">
+                <label>Amount:</label>
+                <div class="input-range">
+                    <input type="text" placeholder="From">
+                    <span>-</span>
+                    <input type="text" placeholder="To">
+                </div>
+            </div>
+            <div class="search-field">
+                <label>Account:</label>
+                <input type="text" placeholder="Select account">
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="filter-btn">Search</button>
+            <button class="filter-btn">Add</button>
+            <button class="filter-btn">Unassigned</button>
+            <button class="filter-btn">Trim</button>
+            <button class="filter-btn">Clear</button>
+            <button class="filter-btn">Remove</button>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Account</td>
+                <td>Date</td>
+                <td>Amount</td>
+                <td>Name</td>
+                <td>Category</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Credit Card</td>
+                <td>Jan 12, 2026</td>
+                <td>2.25</td>
+                <td>Longos</td>
+                <td>info:mix</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Account 2</td>
+                <td>Jan 12, 2026</td>
+                <td>12.25</td>
+                <td>Highland</td>
+                <td>info:mix</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script src="script/menu.js"></script>
+</body>
+</html>
+
