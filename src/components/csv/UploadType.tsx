@@ -1,6 +1,12 @@
 import {uploadItems} from "../../util/util.ts";
 
-export const UploadType = (index: number, selected: (index: number) => string, updateElement: (index: number, newSelected: string) => void) => {
+type UploadTypeProps = {
+    index: number
+    selected: (index: number) => string
+    updateElement: (index: number, newSelected: string) => void
+}
+
+export const UploadType = ({index, selected, updateElement}: UploadTypeProps) => {
 
     const items = uploadItems
 

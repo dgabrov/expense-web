@@ -6,6 +6,7 @@ import type {Account, CsvLine} from "../../data.ts";
 import {getFormats} from "../../util/util.ts";
 import {useDispatch} from "react-redux";
 import {addError} from "../../reducer/header.ts";
+import {DataHeader, DataRow} from "./DataRow.tsx";
 
 export const Csv = () => {
 
@@ -15,6 +16,8 @@ export const Csv = () => {
     const [selectedFormat, setSelectedFormat] = useState<string>(formats[0].languageValue)
     const [uploadField, setUploadField] = useState<HTMLInputElement | null>(null)
     const [processData, setProcessData] = useState<CsvLine[]>([])
+    const [selected, setSelected] = useState<string[]>([])
+    const [dropValues, setDropValues] = useState<{[key:number] : string }>({})
 
     const dispatch = useDispatch()
 
@@ -49,6 +52,34 @@ export const Csv = () => {
         console.log(processData)
     }
 
+    const selectTrigger = (id: string, checked: boolean) => {
+        const newSelected = selected.filter((crtId) => crtId !== id)
+
+        if (checked){
+            newSelected.push(id)
+        }
+
+        setSelected(newSelected)
+    }
+
+
+    const removeSelected = () => {
+        setProcessData(crtData => crtData.filter((it) => !selected.includes(it.id)))
+        setSelected([])
+    }
+
+    const size = processData.length > 0 ? processData[0].payload.length : 0
+
+    const changeValue = (index: number, value: string)  => {
+        const newDropValues = {...dropValues}
+        newDropValues[index] = value
+
+        setDropValues(newDropValues)
+    }
+
+    const showheader = <DataHeader size={size} value={dropValues} change={changeValue}/>
+    const showData = processData.map((it) => <DataRow key={it.id} item={it} selected={selected} select={selectTrigger}/>)
+
     return (
         <div className="container">
             <h1>Upload CSV</h1>
@@ -79,57 +110,14 @@ export const Csv = () => {
 
             <table>
                 <thead>
-                <tr>
-                    <td><input type="checkbox"/></td>
-                    <td>
-                        <select name="" id="">
-                            <option value="name">name</option>
-                            <option value="date">date</option>
-                            <option value="amount">amount</option>
-                            <option value="amount negative">amount negative</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select name="" id="">
-                            <option value="name">name</option>
-                            <option value="date">date</option>
-                            <option value="amount">amount</option>
-                            <option value="amount negative">amount negative</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select name="" id="">
-                            <option value="name">name</option>
-                            <option value="date">date</option>
-                            <option value="amount">amount</option>
-                            <option value="amount negative">amount negative</option>
-                        </select>
-                    </td>
-                </tr>
+                {showheader}
                 </thead>
                 <tbody>
-                <tr>
-                    <td><input type="checkbox"/></td>
-                    <td>name here</td>
-                    <td>12.25</td>
-                    <td>Jan 12, 2023</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"/></td>
-                    <td>name here</td>
-                    <td>12.25</td>
-                    <td>Jan 12, 2023</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox"/></td>
-                    <td>name here</td>
-                    <td>12.25</td>
-                    <td>Jan 12, 2023</td>
-                </tr>
+                {showData}
                 </tbody>
             </table>
             <div className="button-group">
-                <button className="filter-btn">Remove</button>
+                <button className="filter-btn" onClick={removeSelected}>Remove</button>
             </div>
 
         </div>
