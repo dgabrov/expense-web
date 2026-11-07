@@ -11,10 +11,10 @@ export interface uploadItem {
     display: string
 }
 
-const UPLOAD_DATE = "upload_date";
-let UPLOAD_NAME = "upload_name";
-let UPLOAD_PLUS = "upload_plus";
-let UPLOAD_MINUS = "upload_minus";
+export const UPLOAD_DATE = "upload_date";
+export const UPLOAD_NAME = "upload_name";
+export const UPLOAD_PLUS = "upload_plus";
+export const UPLOAD_MINUS = "upload_minus";
 
 export const uploadItems : uploadItem[] = [
     {key: UPLOAD_DATE, display: "Date"},

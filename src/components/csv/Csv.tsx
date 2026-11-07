@@ -3,10 +3,11 @@ import Papa from "papaparse";
 import {v7} from "uuid";
 import {getServr} from "../../server/servr.ts";
 import type {Account, CsvLine} from "../../data.ts";
-import {getFormats} from "../../util/util.ts";
+import {getFormats, processError} from "../../util/util.ts";
 import {useDispatch} from "react-redux";
 import {addError} from "../../reducer/header.ts";
 import {DataHeader, DataRow} from "./DataRow.tsx";
+import {checkSettings} from "./upload.ts";
 
 export const Csv = () => {
 
@@ -47,9 +48,23 @@ export const Csv = () => {
             .catch((err) => dispatch(addError(err)))
     }
 
-    const process = () => {
-        // TODO
-        console.log(processData)
+    const processUpload = async ()=> {
+
+    }
+
+    const process = async () => {
+        try {
+            checkSettings({
+                rowCount: processData.length,
+                format: selectedFormat,
+                account: selectedAccount,
+                columns: Array.from({length: size}, (_, index) => dropValues[index]),
+            });
+
+            await processUpload()
+        } catch (e) {
+            processError(dispatch, e)
+        }
     }
 
     const selectTrigger = (id: string, checked: boolean) => {
