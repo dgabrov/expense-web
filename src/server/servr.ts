@@ -28,6 +28,7 @@ export interface Servr {
     getTransactionById: (id: string) => Promise<Transaction|null>
     searchTransactions: (search: SearchData) => Promise<Transaction[]>
     addTransaction: (transaction: Transaction) => Promise<void>
+    addBulk: (transactions: Transaction[]) => Promise<void>
     updateTransaction: (transaction: Transaction) => Promise<void>
 
     logout(): Promise<void>;

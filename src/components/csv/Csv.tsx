@@ -2,12 +2,13 @@ import {useEffect, useState} from "react";
 import Papa from "papaparse";
 import {v7} from "uuid";
 import {getServr} from "../../server/servr.ts";
-import type {Account, CsvLine} from "../../data.ts";
+import {Location, type Account, type CsvLine} from "../../data.ts";
 import {getFormats, processError} from "../../util/util.ts";
 import {useDispatch} from "react-redux";
-import {addError} from "../../reducer/header.ts";
+import {addError, setLocation} from "../../reducer/header.ts";
+import {setTransactions} from "../../reducer/business.ts";
 import {DataHeader, DataRow} from "./DataRow.tsx";
-import {checkSettings} from "./upload.ts";
+import {buildTransactions, checkSettings} from "./upload.ts";
 
 export const Csv = () => {
 
@@ -48,8 +49,18 @@ export const Csv = () => {
             .catch((err) => dispatch(addError(err)))
     }
 
-    const processUpload = async ()=> {
+    const processUpload = async () => {
+        const transactions = buildTransactions({
+            lines: processData,
+            format: selectedFormat,
+            account: selectedAccount,
+            columns,
+        })
 
+        await getServr().addBulk(transactions)
+
+        dispatch(setTransactions(transactions))
+        dispatch(setLocation(Location.transactions))
     }
 
     const process = async () => {
@@ -58,7 +69,7 @@ export const Csv = () => {
                 rowCount: processData.length,
                 format: selectedFormat,
                 account: selectedAccount,
-                columns: Array.from({length: size}, (_, index) => dropValues[index]),
+                columns,
             });
 
             await processUpload()
@@ -84,6 +95,8 @@ export const Csv = () => {
     }
 
     const size = processData.length > 0 ? processData[0].payload.length : 0
+    // upload key mapped to each column index (undefined when not selected)
+    const columns = Array.from({length: size}, (_, index) => dropValues[index])
 
     const changeValue = (index: number, value: string)  => {
         const newDropValues = {...dropValues}

@@ -133,6 +133,10 @@ export class ServerImpl implements Servr {
         await request<null>("POST", "addTransaction", {body: toWireTransaction(transaction)});
     }
 
+    async addBulk(transactions: Transaction[]): Promise<void> {
+        await request<null>("POST", "addBulk", {body: transactions.map(toWireTransaction)});
+    }
+
     async updateTransaction(transaction: Transaction): Promise<void> {
         await request<null>("POST", "updateTransaction", {body: toWireTransaction(transaction)});
     }

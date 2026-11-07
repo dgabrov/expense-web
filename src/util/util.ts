@@ -81,13 +81,21 @@ export function processError(dispatch: AppDispatch, e: any) {
     }
 }
 
+// Date format values (language layouts) accepted by the CSV upload
+export const DATE_FORMAT_MMM_D_YYYY = 'Jan 2, 2006'
+export const DATE_FORMAT_MMMD_YYYY = 'Jan2, 2006'
+export const DATE_FORMAT_MMM_D_YYYY_NO_SPACE = 'Jan 2,2006'
+export const DATE_FORMAT_MMMD_YYYY_NO_SPACE = 'Jan2,2006'
+export const DATE_FORMAT_ISO = '2006-01-02'
+export const DATE_FORMAT_US = '01/02/2006'
+
 export const getFormats = () : DateFormat[] => {
     return [
-        { languageValue: 'Jan 2, 2006', displayValue: 'MMM d, yyyy' },
-        { languageValue: 'Jan2, 2006', displayValue: 'MMMd, yyyy' },
-        { languageValue: 'Jan 2,2006', displayValue: 'MMM d,yyyy' },
-        { languageValue: 'Jan2,2006', displayValue: 'MMMd,yyyy' },
-        { languageValue: '2006-01-02', displayValue: 'yyyy-MM-dd' },
-        { languageValue: '01/02/2006', displayValue: 'MM/dd/yyyy' }
+        { languageValue: DATE_FORMAT_MMM_D_YYYY, displayValue: 'MMM d, yyyy' },
+        { languageValue: DATE_FORMAT_MMMD_YYYY, displayValue: 'MMMd, yyyy' },
+        { languageValue: DATE_FORMAT_MMM_D_YYYY_NO_SPACE, displayValue: 'MMM d,yyyy' },
+        { languageValue: DATE_FORMAT_MMMD_YYYY_NO_SPACE, displayValue: 'MMMd,yyyy' },
+        { languageValue: DATE_FORMAT_ISO, displayValue: 'yyyy-MM-dd' },
+        { languageValue: DATE_FORMAT_US, displayValue: 'MM/dd/yyyy' }
     ]
 }

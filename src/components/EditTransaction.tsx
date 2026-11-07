@@ -60,15 +60,12 @@ export const EditTransaction = () => {
         ? (accountId || accounts[0]?.id || '')
         : accountId
 
-    const selectedGroupId = adding
-        ? (groupId || groups[0]?.id || '')
-        : (groupId || savedGroupId)
+    // Without a saved category (none set, or adding) fall back to the first group and its first category
+    const selectedGroupId = groupId || savedGroupId || groups[0]?.id || ''
 
     const categories = groups.find((group) => group.id === selectedGroupId)?.categories ?? []
 
-    const selectedCategoryId = adding
-        ? (categoryId || categories[0]?.id || '')
-        : categoryId
+    const selectedCategoryId = categoryId || categories[0]?.id || ''
 
     const changeGroup = (newGroupId: string) => {
         setGroupId(newGroupId)
