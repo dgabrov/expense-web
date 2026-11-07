@@ -6,6 +6,23 @@ export const formatDate = (date: Date) => new Date(date).toLocaleDateString('en-
 
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 
+export interface uploadItem {
+    key: string
+    display: string
+}
+
+const UPLOAD_DATE = "upload_date";
+let UPLOAD_NAME = "upload_name";
+let UPLOAD_PLUS = "upload_plus";
+let UPLOAD_MINUS = "upload_minus";
+
+export const uploadItems : uploadItem[] = [
+    {key: UPLOAD_DATE, display: "Date"},
+    {key: UPLOAD_NAME, display: "Description"},
+    {key: UPLOAD_PLUS, display: "Amount"},
+    {key: UPLOAD_MINUS, display: "Negative"}
+]
+
 // Accepts "Jan 12, 2026", "Jan12, 2026" and "Jan12,2026"
 export const parseLongDate = (text: string): Date => {
     const match = /^([A-Za-z]{3})\s*(\d{1,2}),\s*(\d{4})$/.exec(text.trim())

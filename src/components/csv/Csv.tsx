@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
-import {getServr} from "../server/servr.ts";
-import type {Account} from "../data.ts";
-import {getFormats} from "../util/util.ts";
+import Papa from "papaparse";
+import {v7} from "uuid";
+import {getServr} from "../../server/servr.ts";
+import type {Account, CsvLine} from "../../data.ts";
+import {getFormats} from "../../util/util.ts";
 
 export const Csv = () => {
 
@@ -9,15 +11,30 @@ export const Csv = () => {
     const [selectedAccount, setSelectedAccount] = useState<string>('')
     const formats = getFormats()
     const [selectedFormat, setSelectedFormat] = useState<string>(formats[0].languageValue)
-
-    // TODO continue here, a lot of work to do
+    const [uploadField, setUploadField] = useState<HTMLInputElement | null>(null)
 
     useEffect(() => {
         getServr().getAccounts().then((newAccounts) => setAccounts(newAccounts))
     }, [])
 
+    const loadData = (): Promise<CsvLine[]> => {
+        // The ref callback sets uploadField on mount, so it is only null before the first render.
+        const file = uploadField?.files?.[0]
+        if (!file) {
+            return Promise.resolve([])
+        }
+
+        return new Promise((resolve, reject) => {
+            Papa.parse<string[]>(file, {
+                skipEmptyLines: true,
+                complete: (results) => resolve(results.data.map(payload => ({id: v7(), payload}))),
+                error: (error) => reject(error),
+            })
+        })
+    }
+
     const upload = () => {
-        // TODO
+
     }
 
     const process = () => {
@@ -43,7 +60,7 @@ export const Csv = () => {
                 </div>
                 <div className="search-field">
                     <label>File:</label>
-                    <input type="file"/>
+                    <input type="file" ref ={setUploadField}/>
                 </div>
             </div>
             <div className="button-group">

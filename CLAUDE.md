@@ -9,6 +9,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Technology Stack
 
 - **Frontend**: React 19 + TypeScript + Vite 8 (scaffolded from the Vite React-TS template). Plain CSS in `src/index.css`. ESLint 10 flat config.
+- **State management**: Redux Toolkit 2 (`@reduxjs/toolkit`) with `react-redux` 9
+- **IDs**: `uuid` 14 and `guid` 0.0.12
+- **CSV parsing**: PapaParse 5 (`papaparse`, with `@types/papaparse` for TypeScript)
 - **Backend**: To be implemented
 - **Dev tooling**: `.mcp.json` registers a local JetBrains IDE MCP server (`idea`, `http://127.0.0.1:64342/stream`); `.claude/settings.local.json` enables it.
 
