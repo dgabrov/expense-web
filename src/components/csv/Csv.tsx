@@ -4,6 +4,8 @@ import {v7} from "uuid";
 import {getServr} from "../../server/servr.ts";
 import type {Account, CsvLine} from "../../data.ts";
 import {getFormats} from "../../util/util.ts";
+import {useDispatch} from "react-redux";
+import {addError} from "../../reducer/header.ts";
 
 export const Csv = () => {
 
@@ -12,6 +14,9 @@ export const Csv = () => {
     const formats = getFormats()
     const [selectedFormat, setSelectedFormat] = useState<string>(formats[0].languageValue)
     const [uploadField, setUploadField] = useState<HTMLInputElement | null>(null)
+    const [processData, setProcessData] = useState<CsvLine[]>([])
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         getServr().getAccounts().then((newAccounts) => setAccounts(newAccounts))
@@ -34,11 +39,14 @@ export const Csv = () => {
     }
 
     const upload = () => {
-
+        loadData()
+            .then(setProcessData)
+            .catch((err) => dispatch(addError(err)))
     }
 
     const process = () => {
         // TODO
+        console.log(processData)
     }
 
     return (
