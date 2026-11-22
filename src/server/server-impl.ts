@@ -1,5 +1,12 @@
 import type {Servr} from "./servr.ts";
 import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, SearchData, Transaction} from "../data.ts";
+import type {
+    ReportCategoryResponse,
+    ReportGroupResponse,
+    ReportLastResponse,
+    ReportListResponse,
+    ReportRequest
+} from "../components/reports/report-data.ts";
 import {getServerUrl} from "./get-url.ts";
 
 // Wire form of Date fields: the backend expects and returns calendar dates as "YYYY-MM-DD" (no time, no zone).
@@ -153,6 +160,22 @@ export class ServerImpl implements Servr {
 
     async login(loginData: LoginData): Promise<LoggedUser> {
         return request<LoggedUser>("POST", "login", {body: loginData});
+    }
+
+    async getReportLast(reportRequest: ReportRequest): Promise<ReportLastResponse[]> {
+        return request<ReportLastResponse[]>("POST", "report/last", {body: reportRequest});
+    }
+
+    async getReportGroup(reportRequest: ReportRequest): Promise<ReportGroupResponse> {
+        return request<ReportGroupResponse>("POST", "report/group", {body: reportRequest});
+    }
+
+    async getReportCategory(reportRequest: ReportRequest): Promise<ReportCategoryResponse> {
+        return request<ReportCategoryResponse>("POST", "report/category", {body: reportRequest});
+    }
+
+    async getReportList(reportRequest: ReportRequest): Promise<ReportListResponse> {
+        return request<ReportListResponse>("POST", "report/list", {body: reportRequest});
     }
 
     async logout(): Promise<void> {
