@@ -6,8 +6,103 @@ type ReportGroupProps = {
     groups: Group[]
 }
 
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+// Months are compared as one number (year * 12 + month index), so a range can be walked month by month
+const monthKey = (year: number, month: number) => year * 12 + (month - 1)
+
+const monthLabel = (key: number) => `${MONTH_NAMES[key % 12]} ${Math.floor(key / 12)}`
+
+type Row = {
+    id: string
+    name: string
+    values: number[]
+    total: number
+    average: number
+}
+
 const ReportGroup = ({groupReport, groups}: ReportGroupProps) => {
-    return <div>report group</div>
+    const items = groupReport.items
+
+    if (items.length === 0) {
+        return (
+            <table>
+                <tbody>
+                <tr><td>no items...</td></tr>
+                </tbody>
+            </table>
+        )
+    }
+
+    // every month between the first and the last entry gets a column, even when it has no values
+    const keys = items.map((item) => monthKey(item.year, item.month))
+    const first = Math.min(...keys)
+    const last = Math.max(...keys)
+    const months: number[] = []
+    for (let key = first; key <= last; key++) {
+        months.push(key)
+    }
+
+    // groupId -> (month key -> summed amount)
+    const amounts = new Map<string, Map<number, number>>()
+    for (const item of items) {
+        const byMonth = amounts.get(item.groupId) ?? new Map<number, number>()
+        const key = monthKey(item.year, item.month)
+        byMonth.set(key, (byMonth.get(key) ?? 0) + item.amount)
+        amounts.set(item.groupId, byMonth)
+    }
+
+    // one row per group; entries without a group are shown in their own row
+    const rowSources = groups.map((group) => ({id: group.id, name: group.name}))
+    if (items.some((item) => item.groupId === '')) {
+        rowSources.push({id: '', name: 'No group'})
+    }
+
+    const rows: Row[] = rowSources.map((source) => {
+        const byMonth = amounts.get(source.id)
+        const values = months.map((key) => byMonth?.get(key) ?? 0)
+        const total = values.reduce((sum, value) => sum + value, 0)
+        // average over all months in the range; zero when there are no months to divide by
+        const average = months.length === 0 ? 0 : total / months.length
+
+        return {id: source.id, name: source.name, values, total, average}
+    })
+
+    // sum of each column, including the total and average columns
+    const columnSums = months.map((_, index) => rows.reduce((sum, row) => sum + row.values[index], 0))
+    const totalSum = rows.reduce((sum, row) => sum + row.total, 0)
+    const averageSum = rows.reduce((sum, row) => sum + row.average, 0)
+
+    return (
+        <table>
+            <thead>
+            <tr>
+                <td>Group</td>
+                {months.map((key) => <td key={key}>{monthLabel(key)}</td>)}
+                <td>Total</td>
+                <td>Average</td>
+            </tr>
+            </thead>
+            <tbody>
+            {rows.map((row) => (
+                <tr key={row.id}>
+                    <td>{row.name}</td>
+                    {row.values.map((value, index) => <td key={months[index]}>{value.toFixed(2)}</td>)}
+                    <td>{row.total.toFixed(2)}</td>
+                    <td>{row.average.toFixed(2)}</td>
+                </tr>
+            ))}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td>Total</td>
+                {columnSums.map((sum, index) => <td key={months[index]}>{sum.toFixed(2)}</td>)}
+                <td>{totalSum.toFixed(2)}</td>
+                <td>{averageSum.toFixed(2)}</td>
+            </tr>
+            </tfoot>
+        </table>
+    )
 }
 
 export default ReportGroup

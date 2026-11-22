@@ -546,7 +546,8 @@ table tbody tr:hover {
   background-color: #f9f9f9;
 }
 
-table tbody td {
+table tbody td,
+table tfoot td {
   padding: 12px;
   font-size: 0.95rem;
 }
