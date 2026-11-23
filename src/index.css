@@ -552,6 +552,11 @@ table tfoot td {
   font-size: 0.95rem;
 }
 
+/* Numeric cells in tables: right-aligned, also overrides the left-aligned header default */
+.num {
+  text-align: right;
+}
+
 input[type="checkbox"] {
   cursor: pointer;
   width: 18px;

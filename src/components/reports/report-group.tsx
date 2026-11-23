@@ -66,7 +66,7 @@ const ReportGroup = ({groupReport, groups}: ReportGroupProps) => {
         const average = months.length === 0 ? 0 : total / months.length
 
         return {id: source.id, name: source.name, values, total, average}
-    })
+    }).filter((row) => row.values.some((value) => value !== 0))
 
     // sum of each column, including the total and average columns
     const columnSums = months.map((_, index) => rows.reduce((sum, row) => sum + row.values[index], 0))
@@ -78,27 +78,27 @@ const ReportGroup = ({groupReport, groups}: ReportGroupProps) => {
             <thead>
             <tr>
                 <td>Group</td>
-                {months.map((key) => <td key={key}>{monthLabel(key)}</td>)}
-                <td>Total</td>
-                <td>Average</td>
+                {months.map((key) => <td className="num" key={key}>{monthLabel(key)}</td>)}
+                <td className="num">Total</td>
+                <td className="num">Average</td>
             </tr>
             </thead>
             <tbody>
             {rows.map((row) => (
                 <tr key={row.id}>
                     <td>{row.name}</td>
-                    {row.values.map((value, index) => <td key={months[index]}>{value.toFixed(2)}</td>)}
-                    <td>{row.total.toFixed(2)}</td>
-                    <td>{row.average.toFixed(2)}</td>
+                    {row.values.map((value, index) => <td className="num" key={months[index]}>{value.toFixed(2)}</td>)}
+                    <td className="num">{row.total.toFixed(2)}</td>
+                    <td className="num">{row.average.toFixed(2)}</td>
                 </tr>
             ))}
             </tbody>
             <tfoot>
             <tr>
                 <td>Total</td>
-                {columnSums.map((sum, index) => <td key={months[index]}>{sum.toFixed(2)}</td>)}
-                <td>{totalSum.toFixed(2)}</td>
-                <td>{averageSum.toFixed(2)}</td>
+                {columnSums.map((sum, index) => <td className="num" key={months[index]}>{sum.toFixed(2)}</td>)}
+                <td className="num">{totalSum.toFixed(2)}</td>
+                <td className="num">{averageSum.toFixed(2)}</td>
             </tr>
             </tfoot>
         </table>
