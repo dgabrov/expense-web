@@ -76,6 +76,7 @@ export interface DateFormat {
     displayValue: string
 }
 
-export interface Line {
-    items: string[]
+export interface CsvLine {
+    id: string
+    payload: string[]
 }

@@ -1,21 +1,26 @@
-code the following pages: 
+Data migration: 
+  - do a program for data migration
+  - try a couple of times to see if it works - golang should be
+  - run it in production and create the database that does this
 
-Cash.tsx
-Csv.tsx
-Reports.tsx
-Transactions.tsx
-
-done EditTransaction.tsx
-done CDelTransaction.tsx
-done NotFound.tsx
-done Accounts.tsx
-done Categories.tsx
-done Groups.tsx
-done Header.tsx
-done Login.tsx
-
-at the end:
-look for then without catch and then submit some error with the error, see how you process
+Reports are the following:
+  - last
+  - group
+  - category
+  - list
 
 
-- get accounts should be taken only once from server side not every time you pull up the csv etc.
+Do placeholder for components for
+  - last
+  - group
+  - category
+  - list
+
+Implement the control special
+  - start month, year
+  - end monty, year
+  - exclude none
+  - type
+  - button to trigger the stuff
+
+Decide the data structure for each endpoint and whatever each endpoint would return

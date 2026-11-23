@@ -6,7 +6,7 @@ import {Cash} from "./components/Cash.tsx";
 import {Categories} from "./components/Categories.tsx";
 import {Groups} from "./components/Groups.tsx";
 import {CDelTransaction} from "./components/CDelTransaction.tsx";
-import {Csv} from "./components/Csv.tsx";
+import {Csv} from "./components/csv/Csv.tsx";
 import {EditTransaction} from "./components/EditTransaction.tsx";
 import {NotFound} from "./components/NotFound.tsx";
 import {Reports} from "./components/Reports.tsx";

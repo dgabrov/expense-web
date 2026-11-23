@@ -1,4 +1,11 @@
 import type {Account, Category, CompleteGroup, Group, LoggedUser, LoginData, SearchData, Transaction} from "../data.ts";
+import type {
+    ReportCategoryResponse,
+    ReportGroupResponse,
+    ReportLastResponse,
+    ReportListResponse,
+    ReportRequest
+} from "../components/reports/report-data.ts";
 import {ServerImpl} from "./server-impl.ts";
 
 export interface Servr {
@@ -28,7 +35,13 @@ export interface Servr {
     getTransactionById: (id: string) => Promise<Transaction|null>
     searchTransactions: (search: SearchData) => Promise<Transaction[]>
     addTransaction: (transaction: Transaction) => Promise<void>
+    addBulk: (transactions: Transaction[]) => Promise<void>
     updateTransaction: (transaction: Transaction) => Promise<void>
+
+    getReportLast: (request: ReportRequest) => Promise<ReportLastResponse[]>
+    getReportGroup: (request: ReportRequest) => Promise<ReportGroupResponse>
+    getReportCategory: (request: ReportRequest) => Promise<ReportCategoryResponse>
+    getReportList: (request: ReportRequest) => Promise<ReportListResponse>
 
     logout(): Promise<void>;
 }

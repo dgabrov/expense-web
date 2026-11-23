@@ -546,9 +546,15 @@ table tbody tr:hover {
   background-color: #f9f9f9;
 }
 
-table tbody td {
+table tbody td,
+table tfoot td {
   padding: 12px;
   font-size: 0.95rem;
+}
+
+/* Numeric cells in tables: right-aligned, also overrides the left-aligned header default */
+.num {
+  text-align: right;
 }
 
 input[type="checkbox"] {
