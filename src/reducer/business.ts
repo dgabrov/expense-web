@@ -7,6 +7,7 @@ export interface BusinessStore {
     deleteTransactions: Transaction[]
     editTransaction: EditTransaction
     transactions: Transaction[]
+    assignTransactions: Transaction[]
     selected: string[]
 }
 
@@ -16,6 +17,7 @@ const initialState : BusinessStore = {
     deleteTransactions: [],
     editTransaction: {adding: true, id: ''},
     transactions: [],
+    assignTransactions: [],
     selected: []
 }
 
@@ -37,6 +39,17 @@ const setEditTransactionImpl = (store: BusinessStore, data: PayloadAction<EditTr
 
 const setTransactionsImpl = (store: BusinessStore, data: PayloadAction<Transaction[]>) => {
     store.transactions = data.payload
+}
+
+const setAssignTransactionsImpl = (store: BusinessStore, data: PayloadAction<Transaction[]>) => {
+    store.assignTransactions = data.payload
+}
+
+// sets the category of the transaction with the given id; an empty or null categoryId clears it
+const setTransactionCategoryImpl = (store: BusinessStore, data: PayloadAction<{id: string, categoryId: string | null}>) => {
+    const {id, categoryId} = data.payload
+
+    store.transactions = store.transactions.map((txn) => txn.id === id ? {...txn, categoryId} : txn)
 }
 
 const addTransactionImpl = (store: BusinessStore, data: PayloadAction<Transaction>) => {
@@ -69,6 +82,8 @@ export const businessReducer = createSlice({
         setDeleteTransactions: setDeleteTransactionsImpl,
         setEditTransaction: setEditTransactionImpl,
         setTransactions: setTransactionsImpl,
+        setAssignTransactions: setAssignTransactionsImpl,
+        setTransactionCategory: setTransactionCategoryImpl,
         addTransaction: addTransactionImpl,
         updateTransaction: updateTransactionImpl,
         deleteTransactions: deleteTransactionsImpl,
@@ -83,6 +98,8 @@ export const {
     setDeleteTransactions,
     setEditTransaction,
     setTransactions,
+    setAssignTransactions,
+    setTransactionCategory,
     addTransaction,
     updateTransaction,
     deleteTransactions,
