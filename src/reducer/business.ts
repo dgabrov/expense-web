@@ -45,11 +45,13 @@ const setAssignTransactionsImpl = (store: BusinessStore, data: PayloadAction<Tra
     store.assignTransactions = data.payload
 }
 
-// sets the category of the transaction with the given id; an empty or null categoryId clears it
+// sets the category of the transaction with the given id in both lists; an empty or null categoryId clears it
 const setTransactionCategoryImpl = (store: BusinessStore, data: PayloadAction<{id: string, categoryId: string | null}>) => {
     const {id, categoryId} = data.payload
+    const update = (txn: Transaction) => txn.id === id ? {...txn, categoryId} : txn
 
-    store.transactions = store.transactions.map((txn) => txn.id === id ? {...txn, categoryId} : txn)
+    store.transactions = store.transactions.map(update)
+    store.assignTransactions = store.assignTransactions.map(update)
 }
 
 const addTransactionImpl = (store: BusinessStore, data: PayloadAction<Transaction>) => {

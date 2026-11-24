@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
-import {setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
+import {setAssignTransactions, setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
 import {useEffect, useState} from "react";
 import {Location} from "../data.ts";
 import type {Account, CompleteGroup, SearchData} from "../data.ts";
@@ -99,6 +99,17 @@ export const Transactions = () => {
         }
     }
 
+    const assignTransactions = () => {
+        if (selected.length === 0) {
+            dispatch(addError('Please select at least one transaction to assign'))
+            return
+        }
+
+        // hand the selected transactions over to the assign page
+        dispatch(setAssignTransactions(transactions.filter((transaction) => selected.includes(transaction.id))))
+        dispatch(setLocation(Location.assign))
+    }
+
     const removeTransactions = () => {
         if (selected.length == 0) {
             dispatch(addError('Please select at least one transaction to delete'))
@@ -149,6 +160,7 @@ export const Transactions = () => {
                 <button className="filter-btn" onClick={selectUnassigned}>Unassigned</button>
                 <button className="filter-btn" onClick={trimTransactions}>Trim</button>
                 <button className="filter-btn" onClick={clear}>Clear</button>
+                <button className="filter-btn" onClick={assignTransactions}>Assign</button>
                 <button className="filter-btn" onClick={removeTransactions}>Remove</button>
             </div>
             <table>

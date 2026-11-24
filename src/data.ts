@@ -56,6 +56,7 @@ export interface SearchData {
 export const Location = {
     login: "login",
     accounts: "accounts",
+    assign: "assign",
     cash: "cash",
     categories: "categories",
     groups: "groups",
