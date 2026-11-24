@@ -68,9 +68,9 @@ export const Transactions = () => {
     }
 
     const selectUnassigned = () => {
-        // select only the transactions without a category, the list itself is not changed
+        // select only the transactions without a category (empty or null), the list itself is not changed
         const unassignedIds = transactions
-            .filter((transaction) => transaction.categoryId === null)
+            .filter((transaction) => !transaction.categoryId)
             .map((transaction) => transaction.id)
 
         dispatch(setSelectedTransactions(unassignedIds))

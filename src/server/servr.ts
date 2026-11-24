@@ -41,6 +41,8 @@ export interface Servr {
     addTransaction: (transaction: Transaction) => Promise<void>
     addBulk: (transactions: Transaction[]) => Promise<void>
     updateTransaction: (transaction: Transaction) => Promise<void>
+    // sets the category of one transaction; null clears it
+    setCategory: (transactionId: string, categoryId: string | null) => Promise<void>
 
     getReportLast: (request: ReportRequest) => Promise<ReportLastResponse[]>
     getReportGroup: (request: ReportRequest) => Promise<ReportGroupResponse>

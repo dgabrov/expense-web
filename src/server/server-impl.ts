@@ -54,7 +54,7 @@ const toWireSearch = (search: SearchData): WireSearchData => ({
 });
 
 // Endpoints are relative to the server URL; all of them are GET or POST (see router.go)
-const request = async <T>(method: "GET" | "POST", endpoint: string, options?: {query?: Record<string, string>, body?: unknown}): Promise<T> => {
+const request = async <T>(method: "GET" | "POST" | "PUT", endpoint: string, options?: {query?: Record<string, string>, body?: unknown}): Promise<T> => {
     const serverUrl = await getServerUrl();
     const query = options?.query ? `?${new URLSearchParams(options.query)}` : "";
     const hasBody = options?.body !== undefined;
@@ -146,6 +146,11 @@ export class ServerImpl implements Servr {
 
     async updateTransaction(transaction: Transaction): Promise<void> {
         await request<null>("POST", "updateTransaction", {body: toWireTransaction(transaction)});
+    }
+
+    async setCategory(transactionId: string, categoryId: string | null): Promise<void> {
+        // the backend clears the category when categoryId is empty
+        await request<null>("PUT", "setCategory", {body: {transactionId, categoryId: categoryId ?? ''}});
     }
 
     async searchTransactions(search: SearchData): Promise<Transaction[]> {
