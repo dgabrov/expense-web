@@ -46,6 +46,16 @@ export const parseLongDate = (text: string): Date => {
     return date
 }
 
+// Like parseLongDate, but the year is optional: "Nov 12" and "Nov12" take the current year
+export const parseLongDateOrCurrentYear = (text: string): Date => {
+    const trimmed = text.trim()
+    if (/^[A-Za-z]{3}\s*\d{1,2}$/.test(trimmed)) {
+        return parseLongDate(`${trimmed}, ${new Date().getFullYear()}`)
+    }
+
+    return parseLongDate(trimmed)
+}
+
 // Empty text means no value, negative numbers are fine
 export const parseAmount = (text: string): number | null => {
     const trimmed = text.trim()
