@@ -10,7 +10,8 @@ import {
     UPLOAD_NAME,
     UPLOAD_PLUS,
     parseAmount,
-    parseLongDate
+    parseLongDate,
+    toIsoDate
 } from "../../util/util.ts";
 import type {CsvLine, Transaction} from "../../data.ts";
 
@@ -64,18 +65,8 @@ export const checkSettings = ({rowCount, format, account, columns}: UploadSettin
     }
 }
 
-const buildDate = (text: string, year: number, monthIndex: number, day: number): Date => {
-    const date = new Date(year, monthIndex, day)
-    // Date rolls over invalid days (e.g. Feb 31), so check the parts survived
-    if (date.getFullYear() !== year || date.getMonth() !== monthIndex || date.getDate() !== day) {
-        throw new Error(`Invalid date: "${text}"`)
-    }
-
-    return date
-}
-
-// Parses text written in one of the formats offered by getFormats()
-export const parseUploadDate = (text: string, format: string): Date => {
+// Parses text written in one of the formats offered by getFormats(), returns "YYYY-MM-DD"
+export const parseUploadDate = (text: string, format: string): string => {
     const value = text.trim()
 
     switch (format) {
@@ -89,14 +80,14 @@ export const parseUploadDate = (text: string, format: string): Date => {
             if (!match) {
                 throw new Error(`Cannot parse date: "${text}"`)
             }
-            return buildDate(text, Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+            return toIsoDate(Number(match[1]), Number(match[2]), Number(match[3]), text)
         }
         case DATE_FORMAT_US: {
             const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(value)
             if (!match) {
                 throw new Error(`Cannot parse date: "${text}"`)
             }
-            return buildDate(text, Number(match[3]), Number(match[1]) - 1, Number(match[2]))
+            return toIsoDate(Number(match[3]), Number(match[1]), Number(match[2]), text)
         }
         default:
             throw new Error(`Unknown date format: "${format}"`)

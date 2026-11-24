@@ -33,12 +33,7 @@ function App() {
 
     const location = useAppSelector((state) => state.header.location)
 
-    let component: any = null;
-    if (location in componentMap) {
-        component = componentMap[location];
-    } else {
-        component = <NotFound/>;
-    }
+    const component: ReactNode = location in componentMap ? componentMap[location] : <NotFound/>;
 
   return (
       <div className={'app-container'}>

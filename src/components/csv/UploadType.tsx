@@ -1,3 +1,4 @@
+import type {ChangeEvent} from "react";
 import {uploadItems} from "../../util/util.ts";
 
 type UploadTypeProps = {
@@ -10,7 +11,7 @@ export const UploadType = ({index, selected, updateElement}: UploadTypeProps) =>
 
     const items = uploadItems
 
-    const selectChanged = (event: any) => {
+    const selectChanged = (event: ChangeEvent<HTMLSelectElement>) => {
         const selectedValue = event.target.value
 
         updateElement(index, selectedValue)

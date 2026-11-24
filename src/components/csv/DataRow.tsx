@@ -1,3 +1,4 @@
+import type {ChangeEvent} from "react";
 import type {CsvLine} from "../../data.ts";
 import {UploadType} from "./UploadType.tsx";
 
@@ -17,7 +18,7 @@ export const DataRow = ({item, selected, select}: DataRowProps) => {
         return null
     }
 
-    const triggerSelect = (ev: any) => {
+    const triggerSelect = (ev: ChangeEvent<HTMLInputElement>) => {
         const checked = ev.target.checked
 
         select(id, checked)

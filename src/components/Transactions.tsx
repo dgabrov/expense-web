@@ -1,6 +1,6 @@
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
 import {setAssignTransactions, setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
-import {useEffect, useState} from "react";
+import {useEffect, useState, type MouseEvent} from "react";
 import {Location} from "../data.ts";
 import type {Account, CompleteGroup, SearchData} from "../data.ts";
 import {getServr} from "../server/servr.ts";
@@ -54,14 +54,14 @@ export const Transactions = () => {
             }
 
             dispatch(setTransactions(await getServr().searchTransactions(searchData)))
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }
 
     const addTransaction = () => {
         // new transaction, the id is generated here
-        let newId = v7();
+        const newId = v7();
 
         dispatch(setEditTransaction({id: newId, adding: true}))
         dispatch(setLocation(Location.editTransaction))
@@ -90,7 +90,7 @@ export const Transactions = () => {
     }
 
     const editTransaction = (id: string) => {
-        return (ev: any) => {
+        return (ev: MouseEvent<HTMLAnchorElement>) => {
             ev.preventDefault()
 
             // existing transaction, not adding

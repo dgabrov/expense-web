@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import type {Account, CompleteGroup, Transaction} from "../data.ts";
 import {Location} from "../data.ts"
 import {getServr} from "../server/servr.ts";
-import {formatDate, processError} from "../util/util.ts";
+import {formatDate, parseLongDateOrCurrentYear, processError} from "../util/util.ts";
 import {addError, setLocation} from "../reducer/header.ts";
 import {addTransaction, updateTransaction} from "../reducer/business.ts";
 
@@ -74,13 +74,15 @@ export const EditTransaction = () => {
     }
 
     const save = async () => {
-        const parsedDate = new Date(date)
-        const parsedAmount = Number(amount)
-
-        if (isNaN(parsedDate.getTime())) {
+        let parsedDate: string
+        try {
+            parsedDate = parseLongDateOrCurrentYear(date)
+        } catch {
             dispatch(addError('Please enter a valid date'))
             return
         }
+        const parsedAmount = Number(amount)
+
         if (amount.trim() === '' || isNaN(parsedAmount)) {
             dispatch(addError('Please enter a valid amount'))
             return
@@ -113,7 +115,7 @@ export const EditTransaction = () => {
             }
 
             dispatch(setLocation(Location.transactions))
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }

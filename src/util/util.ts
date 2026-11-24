@@ -2,9 +2,25 @@ import type {CompleteGroup, DateFormat} from "../data.ts";
 import type {AppDispatch} from "../reducer/store.ts";
 import {addError} from "../reducer/header.ts";
 
-export const formatDate = (date: Date) => new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})
+// Calendar dates are plain "YYYY-MM-DD" strings; this only turns one into the display form, e.g. "Nov 23, 2026"
+export const formatDate = (date: string) => {
+    const [year, month, day] = date.split('-').map(Number)
+    return `${monthLabels[month - 1]} ${day}, ${year}`
+}
 
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+// Builds the "YYYY-MM-DD" form of a calendar date (month 1 to 12), throws when the day does not exist (e.g. Feb 31)
+export const toIsoDate = (year: number, month: number, day: number, text: string): string => {
+    const date = new Date(year, month - 1, day)
+    // Date rolls over invalid days (e.g. Feb 31), so check the parts survived
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+        throw new Error(`Invalid date: "${text}"`)
+    }
+
+    return `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+}
 
 export interface uploadItem {
     key: string
@@ -24,7 +40,7 @@ export const uploadItems : uploadItem[] = [
 ]
 
 // Accepts "Jan 12, 2026", "Jan12, 2026" and "Jan12,2026"
-export const parseLongDate = (text: string): Date => {
+export const parseLongDate = (text: string): string => {
     const match = /^([A-Za-z]{3})\s*(\d{1,2}),\s*(\d{4})$/.exec(text.trim())
     if (!match) {
         throw new Error(`Cannot parse date: "${text}"`)
@@ -37,17 +53,11 @@ export const parseLongDate = (text: string): Date => {
         throw new Error(`Cannot parse month in date: "${text}"`)
     }
 
-    const date = new Date(year, month, day)
-    // Date rolls over invalid days (e.g. Feb 31), so check the parts survived
-    if (date.getFullYear() !== year || date.getMonth() !== month || date.getDate() !== day) {
-        throw new Error(`Invalid date: "${text}"`)
-    }
-
-    return date
+    return toIsoDate(year, month + 1, day, text)
 }
 
 // Like parseLongDate, but the year is optional: "Nov 12" and "Nov12" take the current year
-export const parseLongDateOrCurrentYear = (text: string): Date => {
+export const parseLongDateOrCurrentYear = (text: string): string => {
     const trimmed = text.trim()
     if (/^[A-Za-z]{3}\s*\d{1,2}$/.test(trimmed)) {
         return parseLongDate(`${trimmed}, ${new Date().getFullYear()}`)
@@ -82,7 +92,7 @@ export const getCategoryName =(categoryId: string | null, completeGroups: Comple
     return ''
 }
 
-export function processError(dispatch: AppDispatch, e: any) {
+export function processError(dispatch: AppDispatch, e: unknown) {
 
     if (e instanceof Error) {
         dispatch(addError(e.message))
