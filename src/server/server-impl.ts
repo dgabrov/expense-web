@@ -153,6 +153,20 @@ export class ServerImpl implements Servr {
         return transactions.map(fromWireTransaction);
     }
 
+    async getMonthGroup(month: number, year: number, groupId: string): Promise<Transaction[]> {
+        const transactions = await request<WireTransaction[]>("GET", "month/group", {
+            query: {month: String(month), year: String(year), groupId},
+        });
+        return transactions.map(fromWireTransaction);
+    }
+
+    async getMonthCategory(month: number, year: number, categoryId: string): Promise<Transaction[]> {
+        const transactions = await request<WireTransaction[]>("GET", "month/category", {
+            query: {month: String(month), year: String(year), categoryId},
+        });
+        return transactions.map(fromWireTransaction);
+    }
+
     async getTransactionById(id: string): Promise<Transaction | null> {
         const transaction = await request<WireTransaction | null>("GET", "getTransactionById", {query: {id}});
         return transaction ? fromWireTransaction(transaction) : null;

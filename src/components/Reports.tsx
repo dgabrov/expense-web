@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import type {Account, Category, Group} from "../data.ts";
+import {Location, type Account, type Category, type Group, type Transaction} from "../data.ts";
 import ReportGroup from "./reports/report-group.tsx";
 import ReportCategory from "./reports/report-category.tsx";
 import ReportList from "./reports/report-list.tsx";
@@ -13,6 +13,8 @@ import type {
     ReportRequest
 } from "./reports/report-data.ts";
 import {useAppDispatch} from "../reducer/store.ts";
+import {setSelectedTransactions, setTransactions} from "../reducer/business.ts";
+import {addError, setLocation} from "../reducer/header.ts";
 import {getServr} from "../server/servr.ts";
 import {processError} from "../util/util.ts";
 
@@ -123,6 +125,33 @@ export const Reports = () => {
         }
     }
 
+    // loads the transactions behind a clicked value and opens the transactions page with them;
+    // stays on the reports page when the load fails or finds nothing
+    const showTransactions = async (load: () => Promise<Transaction[]>) => {
+        try {
+            const transactions = await load()
+
+            if (!transactions || transactions.length === 0) {
+                dispatch(addError('No transactions for this value'))
+                return
+            }
+
+            dispatch(setTransactions(transactions))
+            dispatch(setSelectedTransactions([]))
+            dispatch(setLocation(Location.transactions))
+        } catch (e: unknown) {
+            processError(dispatch, e)
+        }
+    }
+
+    const groupValueClick = (month: number, year: number, groupId: string) => {
+        showTransactions(() => getServr().getMonthGroup(month, year, groupId))
+    }
+
+    const categoryValueClick = (month: number, year: number, categoryId: string) => {
+        showTransactions(() => getServr().getMonthCategory(month, year, categoryId))
+    }
+
     return (
         <div className="container">
 
@@ -166,8 +195,8 @@ export const Reports = () => {
                 <button className="filter-btn" onClick={submit}>Submit</button>
             </div>
 
-            {reportType === "group" && <ReportGroup groupReport={groupReport} groups={groups}/>}
-            {reportType === "category" && <ReportCategory categoryReport={categoryReport} groups={groups} categories={categories}/>}
+            {reportType === "group" && <ReportGroup groupReport={groupReport} groups={groups} onValueClick={groupValueClick}/>}
+            {reportType === "category" && <ReportCategory categoryReport={categoryReport} groups={groups} categories={categories} onValueClick={categoryValueClick}/>}
             {reportType === "list" && <ReportList listReport={listReport} accounts={accounts} groups={groups} categories={categories}/>}
             {reportType === "last" && <ReportLast lastReport={lastReport} accounts={accounts}/>}
 

@@ -4,6 +4,8 @@ import type {ReportGroupResponse} from "./report-data.ts";
 type ReportGroupProps = {
     groupReport: ReportGroupResponse
     groups: Group[]
+    // called when a month value is clicked; groupId is empty for entries without a group
+    onValueClick: (month: number, year: number, groupId: string) => void
 }
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -21,7 +23,7 @@ type Row = {
     average: number
 }
 
-const ReportGroup = ({groupReport, groups}: ReportGroupProps) => {
+const ReportGroup = ({groupReport, groups, onValueClick}: ReportGroupProps) => {
     const items = groupReport.items
 
     if (items.length === 0) {
@@ -87,7 +89,15 @@ const ReportGroup = ({groupReport, groups}: ReportGroupProps) => {
             {rows.map((row) => (
                 <tr key={row.id}>
                     <td>{row.name}</td>
-                    {row.values.map((value, index) => <td className="num" key={months[index]}>{value.toFixed(2)}</td>)}
+                    {row.values.map((value, index) => (
+                        <td className="num" key={months[index]}>
+                            <a href="#" onClick={(e) => {
+                                e.preventDefault()
+                                // inverse of monthKey: year is the quotient, month the remainder plus one
+                                onValueClick((months[index] % 12) + 1, Math.floor(months[index] / 12), row.id)
+                            }}>{value.toFixed(2)}</a>
+                        </td>
+                    ))}
                     <td className="num">{row.total.toFixed(2)}</td>
                     <td className="num">{row.average.toFixed(2)}</td>
                 </tr>
