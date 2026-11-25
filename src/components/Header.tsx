@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, type MouseEvent} from "react";
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
 import {clear, filterExpiredErrors, setLocation} from "../reducer/header.ts";
 import {getServr} from "../server/servr.ts";
@@ -15,9 +15,9 @@ export const Header = () => {
         }, 500)
 
         return () => clearInterval(interval)
-    }, [])
+    }, [dispatch])
 
-    const logout = async (e: any) => {
+    const logout = async (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
 
         try {
@@ -25,39 +25,39 @@ export const Header = () => {
 
             // attempt to log out on the server side, to delete the cookie
             await getServr().logout()
-        } catch (e: any) {
+        } catch (e: unknown) {
 
             // do nothing just log the error
-            console.log(`error while logging out: ${e.message}`)
+            console.log(`error while logging out: ${e instanceof Error ? e.message : String(e)}`)
         }
     }
 
-    const transactions = (e: any) => {
+    const transactions = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
         dispatch(setLocation(Location.transactions))
     }
 
-    const accounts = (e: any) => {
+    const accounts = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
         dispatch(setLocation(Location.accounts))
     }
 
-    const groups = (e: any) => {
+    const groups = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
         dispatch(setLocation(Location.groups))
     }
 
-    const reports = (e: any) => {
+    const reports = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
         dispatch(setLocation(Location.reports))
     }
 
-    const upload = (e: any) => {
+    const upload = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
         dispatch(setLocation(Location.csv))
     }
 
-    const cash = (e: any) => {
+    const cash = (e: MouseEvent<HTMLAnchorElement>) => {
         e.preventDefault()
         dispatch(setLocation(Location.cash))
     }

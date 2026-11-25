@@ -32,7 +32,7 @@ export const CDelTransaction = () => {
             dispatch(setSelectedTransactions([]))
 
             dispatch(setLocation(Location.transactions))
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }

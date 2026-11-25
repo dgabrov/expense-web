@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, type MouseEvent} from "react";
 import {getServr} from "../server/servr.ts";
 import {Location} from "../data.ts";
 import type {Group} from "../data.ts";
@@ -39,7 +39,7 @@ export const Groups = () => {
     }
 
     const categoriesOf = (group: Group) => {
-        return (ev: any) => {
+        return (ev: MouseEvent<HTMLAnchorElement>) => {
             ev.preventDefault()
 
             dispatch(setGroup(group))
@@ -58,7 +58,7 @@ export const Groups = () => {
             // now remove the groups from the loaded list
             setGroups(groups.filter((group) => !selected.includes(group.id)))
             setSelected([]) // no more selected groups
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }
@@ -72,7 +72,7 @@ export const Groups = () => {
     }
 
     const editGroup = (id: string) => {
-        return (ev: any) => {
+        return (ev: MouseEvent<HTMLAnchorElement>) => {
             ev.preventDefault()
 
             setAdding(false)
@@ -107,7 +107,7 @@ export const Groups = () => {
 
             // ok, hide the stuff
             hideEdit()
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }

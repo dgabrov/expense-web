@@ -2,6 +2,7 @@ import {Header} from "./components/Header.tsx";
 import {Login} from "./components/Login.tsx";
 import {Location} from "./data.ts";
 import {Accounts} from "./components/Accounts.tsx";
+import {Assign} from "./components/Assign.tsx";
 import {Cash} from "./components/Cash.tsx";
 import {Categories} from "./components/Categories.tsx";
 import {Groups} from "./components/Groups.tsx";
@@ -18,6 +19,7 @@ const componentMap : {[key: string]: ReactNode} = {};
 
 componentMap[Location.login] = <Login/>;
 componentMap[Location.accounts] = <Accounts/>;
+componentMap[Location.assign] = <Assign/>;
 componentMap[Location.cash] = <Cash/>;
 componentMap[Location.categories] = <Categories/>;
 componentMap[Location.groups] = <Groups/>;
@@ -31,12 +33,7 @@ function App() {
 
     const location = useAppSelector((state) => state.header.location)
 
-    let component: any = null;
-    if (location in componentMap) {
-        component = componentMap[location];
-    } else {
-        component = <NotFound/>;
-    }
+    const component: ReactNode = location in componentMap ? componentMap[location] : <NotFound/>;
 
   return (
       <div className={'app-container'}>

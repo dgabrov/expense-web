@@ -38,7 +38,8 @@ export interface LoggedUser {
 export interface Transaction {
     id: string
     name: string
-    date: Date
+    // calendar date as "YYYY-MM-DD"
+    date: string
     amount: number
     accountId: string
     categoryId: string | null
@@ -47,8 +48,8 @@ export interface Transaction {
 export interface SearchData {
     search: string | null
     accountFilter: string | null
-    dateFrom: Date | null
-    dateTo: Date | null
+    dateFrom: string | null
+    dateTo: string | null
     amountFrom: number | null
     amountTo: number | null
 }
@@ -56,6 +57,7 @@ export interface SearchData {
 export const Location = {
     login: "login",
     accounts: "accounts",
+    assign: "assign",
     cash: "cash",
     categories: "categories",
     groups: "groups",

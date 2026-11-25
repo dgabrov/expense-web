@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, type MouseEvent} from "react";
 import type {Account} from "../data.ts";
 import {getServr} from "../server/servr.ts";
 import {ConfirmDialog} from "./ConfirmDialog.tsx";
@@ -49,7 +49,7 @@ export const Accounts = () => {
             const newAccounts = accounts.filter((account) => !selected.includes(account.id))
             setAccounts(newAccounts)
             setSelected([]) // no more selected accounts
-    } catch(e: any) {
+    } catch(e: unknown) {
             processError(dispatch, e)
         }
     }
@@ -63,7 +63,7 @@ export const Accounts = () => {
     }
 
     const editAccount = (id: string) => {
-        return (ev: any) => {
+        return (ev: MouseEvent<HTMLAnchorElement>) => {
             ev.preventDefault()
 
             setAdding(false)
@@ -89,7 +89,7 @@ export const Accounts = () => {
     const afterEdit = async () => {
         try {
             if(adding){
-                let newAccount = {id: editId, cash: editCash, name: editName};
+                const newAccount ={id: editId, cash: editCash, name: editName};
                 await getServr().addAccount(newAccount)
 
                 // worked, add it to account list
@@ -103,7 +103,7 @@ export const Accounts = () => {
 
             // ok, hide the stuff
             hideEdit()
-        } catch(e: any) {
+        } catch(e: unknown) {
             processError(dispatch, e)
         }
     }

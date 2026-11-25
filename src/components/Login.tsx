@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, type ChangeEvent} from "react";
 import {useAppDispatch} from "../reducer/store.ts";
 import {processError} from "../util/util.ts";
 import type {LoginData} from "../data.ts";
@@ -12,11 +12,11 @@ export const Login = () => {
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')
 
-    const changeLogin = (e : any) => {
+    const changeLogin = (e: ChangeEvent<HTMLInputElement>) => {
         setLogin(e.target.value)
     }
 
-    const changePassword = (e: any) => {
+    const changePassword = (e: ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value)
     }
 
@@ -30,7 +30,7 @@ export const Login = () => {
 
             // login was ok, proceeding to the page with the transactions or whatever
             dispatch(loggedUser(lgUser))
-        } catch(e: any) {
+        } catch(e: unknown) {
             processError(dispatch, e)
         }
     }

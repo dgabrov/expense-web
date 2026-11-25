@@ -34,9 +34,15 @@ export interface Servr {
 
     getTransactionById: (id: string) => Promise<Transaction|null>
     searchTransactions: (search: SearchData) => Promise<Transaction[]>
+    // transactions of one month for a group; groupId empty selects those without a group
+    getMonthGroup: (month: number, year: number, groupId: string) => Promise<Transaction[]>
+    // transactions of one month for a category; categoryId empty selects those without a category
+    getMonthCategory: (month: number, year: number, categoryId: string) => Promise<Transaction[]>
     addTransaction: (transaction: Transaction) => Promise<void>
     addBulk: (transactions: Transaction[]) => Promise<void>
     updateTransaction: (transaction: Transaction) => Promise<void>
+    // sets the category of one transaction; null clears it
+    setCategory: (transactionId: string, categoryId: string | null) => Promise<void>
 
     getReportLast: (request: ReportRequest) => Promise<ReportLastResponse[]>
     getReportGroup: (request: ReportRequest) => Promise<ReportGroupResponse>

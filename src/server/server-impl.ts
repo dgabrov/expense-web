@@ -9,52 +9,14 @@ import type {
 } from "../components/reports/report-data.ts";
 import {getServerUrl} from "./get-url.ts";
 
-// Wire form of Date fields: the backend expects and returns calendar dates as "YYYY-MM-DD" (no time, no zone).
-interface WireTransaction extends Omit<Transaction, "date"> {
-    date: string
-}
-
-interface WireSearchData extends Omit<SearchData, "dateFrom" | "dateTo"> {
-    dateFrom: string | null
-    dateTo: string | null
-}
-
 // Mirrors data.ErrorResponse, which the backend sends with status 400 on failure
 interface ErrorResponse {
     message: string
     items: string[]
 }
 
-const formatDate = (date: Date): string => {
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${date.getFullYear()}-${month}-${day}`;
-}
-
-// Parsed as local midnight so the calendar day is not shifted by the timezone
-const parseDate = (value: string): Date => {
-    const [year, month, day] = value.split("-").map(Number);
-    return new Date(year, month - 1, day);
-}
-
-const toWireTransaction = (transaction: Transaction): WireTransaction => ({
-    ...transaction,
-    date: formatDate(transaction.date),
-});
-
-const fromWireTransaction = (transaction: WireTransaction): Transaction => ({
-    ...transaction,
-    date: parseDate(transaction.date),
-});
-
-const toWireSearch = (search: SearchData): WireSearchData => ({
-    ...search,
-    dateFrom: search.dateFrom ? formatDate(search.dateFrom) : null,
-    dateTo: search.dateTo ? formatDate(search.dateTo) : null,
-});
-
 // Endpoints are relative to the server URL; all of them are GET or POST (see router.go)
-const request = async <T>(method: "GET" | "POST", endpoint: string, options?: {query?: Record<string, string>, body?: unknown}): Promise<T> => {
+const request = async <T>(method: "GET" | "POST" | "PUT", endpoint: string, options?: {query?: Record<string, string>, body?: unknown}): Promise<T> => {
     const serverUrl = await getServerUrl();
     const query = options?.query ? `?${new URLSearchParams(options.query)}` : "";
     const hasBody = options?.body !== undefined;
@@ -137,25 +99,40 @@ export class ServerImpl implements Servr {
     }
 
     async addTransaction(transaction: Transaction): Promise<void> {
-        await request<null>("POST", "addTransaction", {body: toWireTransaction(transaction)});
+        await request<null>("POST", "addTransaction", {body: transaction});
     }
 
     async addBulk(transactions: Transaction[]): Promise<void> {
-        await request<null>("POST", "addBulk", {body: transactions.map(toWireTransaction)});
+        await request<null>("POST", "addBulk", {body: transactions});
     }
 
     async updateTransaction(transaction: Transaction): Promise<void> {
-        await request<null>("POST", "updateTransaction", {body: toWireTransaction(transaction)});
+        await request<null>("POST", "updateTransaction", {body: transaction});
+    }
+
+    async setCategory(transactionId: string, categoryId: string | null): Promise<void> {
+        // the backend clears the category when categoryId is empty
+        await request<null>("PUT", "setCategory", {body: {transactionId, categoryId: categoryId ?? ''}});
     }
 
     async searchTransactions(search: SearchData): Promise<Transaction[]> {
-        const transactions = await request<WireTransaction[]>("POST", "searchTransactions", {body: toWireSearch(search)});
-        return transactions.map(fromWireTransaction);
+        return request<Transaction[]>("POST", "searchTransactions", {body: search});
+    }
+
+    async getMonthGroup(month: number, year: number, groupId: string): Promise<Transaction[]> {
+        return request<Transaction[]>("GET", "month/group", {
+            query: {month: String(month), year: String(year), groupId},
+        });
+    }
+
+    async getMonthCategory(month: number, year: number, categoryId: string): Promise<Transaction[]> {
+        return request<Transaction[]>("GET", "month/category", {
+            query: {month: String(month), year: String(year), categoryId},
+        });
     }
 
     async getTransactionById(id: string): Promise<Transaction | null> {
-        const transaction = await request<WireTransaction | null>("GET", "getTransactionById", {query: {id}});
-        return transaction ? fromWireTransaction(transaction) : null;
+        return request<Transaction | null>("GET", "getTransactionById", {query: {id}});
     }
 
     async login(loginData: LoginData): Promise<LoggedUser> {

@@ -1,6 +1,6 @@
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
-import {setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
-import {useEffect, useState} from "react";
+import {setAssignTransactions, setDeleteTransactions, setEditTransaction, setSelectedTransactions, setTransactions} from "../reducer/business.ts";
+import {useEffect, useState, type MouseEvent} from "react";
 import {Location} from "../data.ts";
 import type {Account, CompleteGroup, SearchData} from "../data.ts";
 import {getServr} from "../server/servr.ts";
@@ -54,23 +54,23 @@ export const Transactions = () => {
             }
 
             dispatch(setTransactions(await getServr().searchTransactions(searchData)))
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }
 
     const addTransaction = () => {
         // new transaction, the id is generated here
-        let newId = v7();
+        const newId = v7();
 
         dispatch(setEditTransaction({id: newId, adding: true}))
         dispatch(setLocation(Location.editTransaction))
     }
 
     const selectUnassigned = () => {
-        // select only the transactions without a category, the list itself is not changed
+        // select only the transactions without a category (empty or null), the list itself is not changed
         const unassignedIds = transactions
-            .filter((transaction) => transaction.categoryId === null)
+            .filter((transaction) => !transaction.categoryId)
             .map((transaction) => transaction.id)
 
         dispatch(setSelectedTransactions(unassignedIds))
@@ -90,13 +90,24 @@ export const Transactions = () => {
     }
 
     const editTransaction = (id: string) => {
-        return (ev: any) => {
+        return (ev: MouseEvent<HTMLAnchorElement>) => {
             ev.preventDefault()
 
             // existing transaction, not adding
             dispatch(setEditTransaction({id: id, adding: false}))
             dispatch(setLocation(Location.editTransaction))
         }
+    }
+
+    const assignTransactions = () => {
+        if (selected.length === 0) {
+            dispatch(addError('Please select at least one transaction to assign'))
+            return
+        }
+
+        // hand the selected transactions over to the assign page
+        dispatch(setAssignTransactions(transactions.filter((transaction) => selected.includes(transaction.id))))
+        dispatch(setLocation(Location.assign))
     }
 
     const removeTransactions = () => {
@@ -149,6 +160,7 @@ export const Transactions = () => {
                 <button className="filter-btn" onClick={selectUnassigned}>Unassigned</button>
                 <button className="filter-btn" onClick={trimTransactions}>Trim</button>
                 <button className="filter-btn" onClick={clear}>Clear</button>
+                <button className="filter-btn" onClick={assignTransactions}>Assign</button>
                 <button className="filter-btn" onClick={removeTransactions}>Remove</button>
             </div>
             <table>

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, type MouseEvent} from "react";
 import type {Category} from "../data.ts";
 import {Location} from "../data.ts";
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
@@ -27,7 +27,7 @@ export const Categories = () => {
         if (!group) {
             dispatch(setLocation(Location.groups))
         }
-    }, [group])
+    }, [group, dispatch])
 
     useEffect(() => {
         if (group) {
@@ -60,7 +60,7 @@ export const Categories = () => {
             // now remove the categories from the loaded list
             setCategories(categories.filter((category) => !selected.includes(category.id)))
             setSelected([]) // no more selected categories
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }
@@ -74,7 +74,7 @@ export const Categories = () => {
     }
 
     const editCategory = (id: string) => {
-        return (ev: any) => {
+        return (ev: MouseEvent<HTMLAnchorElement>) => {
             ev.preventDefault()
 
             setAdding(false)
@@ -109,7 +109,7 @@ export const Categories = () => {
 
             // ok, hide the stuff
             hideEdit()
-        } catch (e: any) {
+        } catch (e: unknown) {
             processError(dispatch, e)
         }
     }
