@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../reducer/store.ts";
-import {setTransactionCategory} from "../reducer/business.ts";
-import {addError} from "../reducer/header.ts";
+import {setAssignTransactions, setTransactionCategory} from "../reducer/business.ts";
+import {addError, setLocation} from "../reducer/header.ts";
+import {Location} from "../data.ts";
 import type {Account, CompleteGroup, Transaction} from "../data.ts";
 import {getServr} from "../server/servr.ts";
 import {formatDate, processError} from "../util/util.ts";
@@ -28,6 +29,8 @@ export const Assign = () => {
     const [completeGroups, setCompleteGroups] = useState<CompleteGroup[]>([])
     // row of assignTransactions that the next category click applies to
     const [currentIndex, setCurrentIndex] = useState<number>(0)
+    // group whose categories are shown in the right-hand table, null until one is clicked
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
 
     useEffect(() => {
         getServr().getAccounts()
@@ -39,6 +42,9 @@ export const Assign = () => {
     }, [dispatch])
 
     const accountName = (id: string) => accounts.find((account) => account.id === id)?.name ?? ''
+
+    const sortedGroups = [...completeGroups].sort((a, b) => a.name.localeCompare(b.name))
+    const selectedGroup = completeGroups.find((group) => group.id === selectedGroupId) ?? null
 
     // group and category names for a categoryId, both empty when the transaction has no category
     const categoryNames = (categoryId: string | null): {group: string, category: string} => {
@@ -72,10 +78,29 @@ export const Assign = () => {
         }
     }
 
+    // keeps only the transactions that still have no category; when nothing is left, go back to transactions
+    const cleanQualified = () => {
+        if (assignTransactions.length === 0) {
+            return
+        }
+
+        const remaining = assignTransactions.filter((transaction) => !transaction.categoryId)
+        dispatch(setAssignTransactions(remaining))
+        setCurrentIndex(0)
+
+        if (remaining.length === 0) {
+            dispatch(addError('ok you removed everything'))
+            dispatch(setLocation(Location.transactions))
+        }
+    }
+
     return (
         <div className="container">
 
             <h1>Assign Categories</h1>
+            <div className="button-group">
+                <button className="filter-btn" onClick={cleanQualified}>Clean Qualified</button>
+            </div>
             <div style={{display: 'flex', gap: '1rem', alignItems: 'flex-start', flexWrap: 'wrap'}}>
                 <div style={{flex: '1 1 40%', minWidth: '300px'}}>
                     <table>
@@ -118,25 +143,42 @@ export const Assign = () => {
                 </div>
 
                 <div style={{flex: '1 1 40%', display: 'flex', gap: '1rem', alignItems: 'flex-start', flexWrap: 'wrap'}}>
-                    {completeGroups.map((group) => (
-                        <table key={group.id} style={{width: 'auto'}}>
-                            <thead>
-                            <tr><td>{group.name}</td></tr>
-                            </thead>
-                            <tbody>
-                            {group.categories.map((category) => (
-                                <tr key={category.id}>
-                                    <td>
-                                        <a href="#" onClick={(e) => {
-                                            e.preventDefault()
-                                            assignCategory(category.id)
-                                        }}>{category.name}</a>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    ))}
+                    <table style={{width: 'auto'}}>
+                        <thead>
+                        <tr><td>Groups</td></tr>
+                        </thead>
+                        <tbody>
+                        {sortedGroups.map((group) => (
+                            <tr key={group.id} style={{background: group.id === selectedGroupId ? '#d9e8ff' : undefined}}>
+                                <td>
+                                    <a href="#" onClick={(e) => {
+                                        e.preventDefault()
+                                        setSelectedGroupId(group.id)
+                                    }}>{group.name}</a>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+
+                    <table style={{width: 'auto'}}>
+                        <thead>
+                        <tr><td>Categories</td></tr>
+                        </thead>
+                        <tbody>
+                        {!selectedGroup && <tr><td>select a group...</td></tr>}
+                        {selectedGroup?.categories.map((category) => (
+                            <tr key={category.id}>
+                                <td>
+                                    <a href="#" onClick={(e) => {
+                                        e.preventDefault()
+                                        assignCategory(category.id)
+                                    }}>{category.name}</a>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
